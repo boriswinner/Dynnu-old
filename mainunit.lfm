@@ -1,0 +1,36 @@
+object MainForm: TMainForm
+  Left = 568
+  Height = 500
+  Top = 232
+  Width = 640
+  Caption = 'Dynnu'
+  ClientHeight = 480
+  ClientWidth = 640
+  Menu = MainMenu
+  LCLVersion = '1.6.0.4'
+  object MainPaintBox: TPaintBox
+    Left = 0
+    Height = 480
+    Top = 0
+    Width = 640
+    Align = alClient
+    OnMouseDown = MainPaintBoxMouseDown
+    OnMouseMove = MainPaintBoxMouseMove
+    OnPaint = MainPaintBoxPaint
+  end
+  object MainMenu: TMainMenu
+    left = 24
+    object FileSubMenu: TMenuItem
+      Caption = 'File'
+      object ExitMenuItem: TMenuItem
+        Caption = 'Exit'
+      end
+    end
+    object HelpSubMenu: TMenuItem
+      Caption = 'Help'
+      object AboutMenuItem: TMenuItem
+        Caption = 'About'
+      end
+    end
+  end
+end
