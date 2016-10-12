@@ -37,11 +37,13 @@
       <Unit0>
         <Filename Value="Dynnu.pas"/>
         <IsPartOfProject Value="True"/>
+        <UnitName Value="Dynnu"/>
       </Unit0>
       <Unit1>
         <Filename Value="mainunit.pas"/>
         <IsPartOfProject Value="True"/>
         <ComponentName Value="MainForm"/>
+        <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <UnitName Value="MainUnit"/>
       </Unit1>
@@ -64,6 +66,9 @@
         </Win32>
       </Options>
     </Linking>
+    <Other>
+      <CompilerPath Value="$(CompPath)"/>
+    </Other>
   </CompilerOptions>
   <Debugging>
     <Exceptions Count="3">

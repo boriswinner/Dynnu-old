@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls;
+  ExtCtrls, StdCtrls;
 
 type
     TPolyline = array of TPoint;
@@ -14,6 +14,7 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    Label1: TLabel;
     MainMenu: TMainMenu;
     FileSubMenu: TMenuItem;
     HelpSubMenu: TMenuItem;
@@ -27,7 +28,7 @@ type
     procedure MainPaintBoxPaint(Sender: TObject);
   private
     { private declarations }
-    Polyline: TPolyline;
+    Polylines: array of TPolyline;
   public
     { public declarations }
   end;
@@ -44,10 +45,11 @@ implementation
 procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (ssLeft in Shift) then
+  //if (ssLeft in Shift) then
   begin
-    setlength(Polyline,length(Polyline)+1);
-    Polyline[high(Polyline)] := Point(X,Y);
+    setlength(Polylines,length(Polylines)+1);
+    setlength(Polylines[high(Polylines)],length(Polylines[high(Polylines)])+1);
+    Polylines[high(Polylines)][high(Polylines[high(Polylines)])] := Point(X,Y);
     Invalidate;
   end;
 end;
@@ -57,19 +59,23 @@ procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X
 begin
   if (ssLeft in Shift) then
   begin
-    setlength(Polyline,length(Polyline)+1);
-    Polyline[high(Polyline)] := Point(X,Y);
+    setlength(Polylines[high(Polylines)],length(Polylines[high(Polylines)])+1);
+    Polylines[high(Polylines)][high(Polylines[high(Polylines)])] := Point(X,Y);
     Invalidate;
   end;
 end;
 
 procedure TMainForm.MainPaintBoxPaint(Sender: TObject);
 var
-  i: integer;
+  i,j: integer;
 begin
-  for i := 0 to high(Polyline)-1 do
+  label1.Caption:=IntToStr(length(Polylines));
+  for i := 0 to high(Polylines) do
   begin
-    MainPaintBox.Canvas.Line(Polyline[i].X,Polyline[i].Y,Polyline[i+1].X,Polyline[i+1].Y);
+    for j := 0 to high(Polylines[i])-1 do
+    begin
+      MainPaintBox.Canvas.Line(Polylines[i][j],Polylines[i][j+1]);
+    end;
   end;
 end;
 
