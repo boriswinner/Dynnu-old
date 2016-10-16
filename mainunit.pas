@@ -24,6 +24,8 @@ type
     ExitMenuItem: TMenuItem;
     AboutMenuItem: TMenuItem;
     MainPaintBox: TPaintBox;
+    procedure AboutMenuItemClick(Sender: TObject);
+    procedure ExitMenuItemClick(Sender: TObject);
     procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
       Shift: TShiftState);
     procedure MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -71,6 +73,16 @@ begin
   Polylines[high(Polylines)].Color := AColor;
   //MainPaintBox.Canvas.Pen.Color := AColor;
   ColorWasChanged := true;
+end;
+
+procedure TMainForm.ExitMenuItemClick(Sender: TObject);
+begin
+  MainForm.Close;
+end;
+
+procedure TMainForm.AboutMenuItemClick(Sender: TObject);
+begin
+  ShowMessage('Boris Timofeenko, b8103a');
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,

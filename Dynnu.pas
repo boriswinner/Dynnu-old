@@ -13,7 +13,6 @@ uses
 {$R *.res}
 
 begin
-  Application.Title:='Dynnu';
   RequireDerivedFormResource:=True;
   Application.Initialize;
   Application.CreateForm(TMainForm, MainForm);

@@ -40,12 +40,14 @@ object MainForm: TMainForm
       Caption = 'File'
       object ExitMenuItem: TMenuItem
         Caption = 'Exit'
+        OnClick = ExitMenuItemClick
       end
     end
     object HelpSubMenu: TMenuItem
       Caption = 'Help'
       object AboutMenuItem: TMenuItem
         Caption = 'About'
+        OnClick = AboutMenuItemClick
       end
     end
   end
