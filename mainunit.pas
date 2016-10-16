@@ -9,7 +9,10 @@ uses
   ExtCtrls, StdCtrls, ColorPalette;
 
 type
-    TPolyline = array of TPoint;
+    TPolyline = record
+      Points: array of TPoint;
+      Color: TColor;
+    end;
 
   { TMainForm }
 
@@ -31,6 +34,7 @@ type
   private
     { private declarations }
     Polylines: array of TPolyline;
+    ColorWasChanged: boolean;
   public
     { public declarations }
   end;
@@ -48,9 +52,10 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   begin
-    setlength(Polylines,length(Polylines)+1);
-    setlength(Polylines[high(Polylines)],length(Polylines[high(Polylines)])+1);
-    Polylines[high(Polylines)][high(Polylines[high(Polylines)])] := Point(X,Y);
+    if (ColorWasChanged = false) then setlength(Polylines,length(Polylines)+1);
+    ColorWasChanged := false;
+    setlength(Polylines[high(Polylines)].Points,length(Polylines[high(Polylines)].Points)+1);
+    Polylines[high(Polylines)].Points[high(Polylines[high(Polylines)].Points)] := Point(X,Y);
     Invalidate;
   end;
 end;
@@ -58,7 +63,10 @@ end;
 procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 begin
-  MainPaintBox.Canvas.Pen.Color := AColor;
+  if (ColorWasChanged = false) then setlength(Polylines,length(Polylines)+1);
+  Polylines[high(Polylines)].Color := AColor;
+  //MainPaintBox.Canvas.Pen.Color := AColor;
+  ColorWasChanged := true;
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -66,8 +74,8 @@ procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X
 begin
   if (ssLeft in Shift) then
   begin
-    setlength(Polylines[high(Polylines)],length(Polylines[high(Polylines)])+1);
-    Polylines[high(Polylines)][high(Polylines[high(Polylines)])] := Point(X,Y);
+    setlength(Polylines[high(Polylines)].Points,length(Polylines[high(Polylines)].Points)+1);
+    Polylines[high(Polylines)].Points[high(Polylines[high(Polylines)].Points)] := Point(X,Y);
     Invalidate;
   end;
 end;
@@ -78,9 +86,10 @@ var
 begin
   for i := 0 to high(Polylines) do
   begin
-    for j := 0 to high(Polylines[i])-1 do
+    for j := 0 to high(Polylines[i].Points)-1 do
     begin
-      MainPaintBox.Canvas.Line(Polylines[i][j],Polylines[i][j+1]);
+      MainPaintBox.Canvas.Pen.Color := Polylines[i].Color;
+      MainPaintBox.Canvas.Line(Polylines[i].Points[j],Polylines[i].Points[j+1]);
     end;
   end;
 end;
