@@ -52,7 +52,11 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   begin
-    if (ColorWasChanged = false) then setlength(Polylines,length(Polylines)+1);
+    if (ColorWasChanged = false) then
+    begin
+      setlength(Polylines,length(Polylines)+1);
+      Polylines[high(Polylines)].Color := Polylines[high(Polylines)-1].Color;
+    end;
     ColorWasChanged := false;
     setlength(Polylines[high(Polylines)].Points,length(Polylines[high(Polylines)].Points)+1);
     Polylines[high(Polylines)].Points[high(Polylines[high(Polylines)].Points)] := Point(X,Y);
