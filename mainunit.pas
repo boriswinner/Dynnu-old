@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls;
+  ExtCtrls, StdCtrls, ColorPalette;
 
 type
     TPolyline = array of TPoint;
@@ -14,13 +14,15 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
-    Label1: TLabel;
+    MainColorPalette: TColorPalette;
     MainMenu: TMainMenu;
     FileSubMenu: TMenuItem;
     HelpSubMenu: TMenuItem;
     ExitMenuItem: TMenuItem;
     AboutMenuItem: TMenuItem;
     MainPaintBox: TPaintBox;
+    procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
+      Shift: TShiftState);
     procedure MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -45,13 +47,18 @@ implementation
 procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  //if (ssLeft in Shift) then
   begin
     setlength(Polylines,length(Polylines)+1);
     setlength(Polylines[high(Polylines)],length(Polylines[high(Polylines)])+1);
     Polylines[high(Polylines)][high(Polylines[high(Polylines)])] := Point(X,Y);
     Invalidate;
   end;
+end;
+
+procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
+  Shift: TShiftState);
+begin
+  MainPaintBox.Canvas.Pen.Color := AColor;
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -69,7 +76,6 @@ procedure TMainForm.MainPaintBoxPaint(Sender: TObject);
 var
   i,j: integer;
 begin
-  label1.Caption:=IntToStr(length(Polylines));
   for i := 0 to high(Polylines) do
   begin
     for j := 0 to high(Polylines[i])-1 do

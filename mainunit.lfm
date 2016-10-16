@@ -7,23 +7,31 @@ object MainForm: TMainForm
   ClientHeight = 480
   ClientWidth = 640
   Menu = MainMenu
-  LCLVersion = '1.2.6.0'
+  LCLVersion = '1.6.0.4'
   object MainPaintBox: TPaintBox
     Left = 0
     Height = 480
     Top = 0
-    Width = 640
+    Width = 561
     Align = alClient
+    Color = clWhite
+    ParentColor = False
     OnMouseDown = MainPaintBoxMouseDown
     OnMouseMove = MainPaintBoxMouseMove
     OnPaint = MainPaintBoxPaint
   end
-  object Label1: TLabel
-    Left = 317
-    Height = 15
-    Top = 2
-    Width = 34
-    Caption = 'Label1'
+  object MainColorPalette: TColorPalette
+    Left = 561
+    Height = 480
+    Top = 0
+    Width = 79
+    ButtonHeight = 12
+    ButtonWidth = 12
+    ColumnCount = 7
+    PaletteKind = pkGradientPalette
+    PickedIndex = 0
+    OnColorPick = MainColorPaletteColorPick
+    Align = alRight
     ParentColor = False
   end
   object MainMenu: TMainMenu
