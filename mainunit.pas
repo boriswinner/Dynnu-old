@@ -24,6 +24,7 @@ type
     ExitMenuItem: TMenuItem;
     AboutMenuItem: TMenuItem;
     MainPaintBox: TPaintBox;
+    PaintPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
     procedure ExitMenuItemClick(Sender: TObject);
     procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
