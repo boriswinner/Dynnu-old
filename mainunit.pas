@@ -6,13 +6,14 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, ColorPalette,AboutUnit;
+  ExtCtrls, StdCtrls, ColorPalette,
+  AboutUnit,FiguresUnit;
 
 type
-    TPolyline = record
+    {TPolyline = record
       Points: array of TPoint;
       Color: TColor;
-    end;
+    end;}
 
   { TMainForm }
 
@@ -55,9 +56,10 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   begin
-    if (ColorWasChanged = false) then
+    //if (ColorWasChanged = false) then
     begin
       SetLength(Polylines,length(Polylines)+1);
+      Polylines[high(Polylines)] := TPolyline.Create;
       Polylines[high(Polylines)].Color := Polylines[high(Polylines)-1].Color;
     end;
     ColorWasChanged := false;
@@ -102,15 +104,14 @@ end;
 
 procedure TMainForm.MainPaintBoxPaint(Sender: TObject);
 var
-  i,j: integer;
+i,j: integer;
 begin
   for i := 0 to high(Polylines) do
   begin
-    MainPaintBox.Canvas.Pen.Color := Polylines[i].Color;
-    MainPaintBox.Canvas.Polyline(Polylines[i].Points,0,high(Polylines[i].Points)-1);
+    Canvas.Pen.Color := Polylines[i].Color;
+    Canvas.Polyline(Polylines[i].Points,0,high(Polylines[i].Points)-1);
   end;
 end;
 
 end.
-//Pascal тип Polyline
 //улучшить код
