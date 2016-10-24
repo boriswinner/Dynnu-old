@@ -9,8 +9,10 @@ uses
 
 type
 
-  TFigure = class
+  TFigure = class(TPersistent)
     //procedure Draw(Canvas: TCanvas); virtual;
+  public
+    Points: array of TPoint;
   end;
 
   TPolyline = class(TFigure)
@@ -18,9 +20,12 @@ type
   private
   protected
   public
-    Points: array of TPoint;
+    //Points: array of TPoint;
     Color: TColor;
   end;
+
+var
+  Figures: array of TFigure;
 implementation
 
 //procedure TPolyline.Draw(Canvas: TCanvas);

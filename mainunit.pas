@@ -60,14 +60,14 @@ begin
     begin
       SetLength(Polylines,length(Polylines)+1);
       Polylines[high(Polylines)] := TPolyline.Create;
-      Polylines[high(Polylines)].Color := Polylines[high(Polylines)-1].Color;
+      //Polylines[high(Polylines)].Color := Polylines[high(Polylines)-1].Color;
     end;
     ColorWasChanged := false;
     with Polylines[high(Polylines)] do begin
       SetLength(Points,length(Points)+1);
       Points[high(Points)] := Point(X,Y);
     end;
-    Invalidate;
+    //Invalidate;
   end;
 end;
 
