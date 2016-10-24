@@ -30,6 +30,7 @@ type
     RectangleToolButton: TRadioButton;
     procedure AboutMenuItemClick(Sender: TObject);
     procedure ExitMenuItemClick(Sender: TObject);
+    procedure FormCreate(Sender: TObject);
     procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
       Shift: TShiftState);
     procedure MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -51,6 +52,7 @@ var
   MainForm: TMainForm;
   Figures: array of TFigure;
   ColorWasChanged: boolean;
+  Color1,Color2: TColor;
 implementation
 
 {$R *.lfm}
@@ -61,14 +63,7 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   begin
-    SetLength(Figures,length(Figures)+1);
-    Figures[high(Figures)] := TPolyline.Create;
-    if (length(Figures) >= 2) then Figures[high(Figures)].Color := Figures[high(Figures)-1].Color;
-    ColorWasChanged := false;
-    with Figures[high(Figures)] do begin
-      SetLength(Points,length(Points)+1);
-      Points[high(Points)] := Point(X,Y);
-    end;
+    CurrentTool.FigureCreate(Point(X,Y));
     Invalidate;
   end;
 end;
@@ -90,6 +85,12 @@ begin
   MainForm.Close;
 end;
 
+procedure TMainForm.FormCreate(Sender: TObject);
+begin
+  PolylineToolButtonClick(self);
+  PolylineToolButton.Checked := true;
+end;
+
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
 begin
   AboutForm.ShowModal;
@@ -100,12 +101,9 @@ procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X
 begin
   if (ssLeft in Shift) then
   begin
-    with Figures[high(Figures)] do begin
-      SetLength(Points,length(Points)+1);
-      Points[high(Points)] := Point(X,Y);
-    end;
-    Invalidate;
+    CurrentTool.AddPoint(Point(X,Y));
   end;
+  Invalidate;
 end;
 
 procedure TMainForm.MainPaintBoxPaint(Sender: TObject);

@@ -52,12 +52,13 @@ end;
 
 procedure TRectangleTool.FigureCreate(Point: TPoint);
 begin
-  SetLength(Figures,length(Figures)+2);
+  SetLength(Figures,length(Figures)+1);
   Figures[high(Figures)] := TRectangle.Create;
   if (length(Figures) >= 2) then Figures[high(Figures)].Color := Figures[high(Figures)-1].Color;
   ColorWasChanged := false;
   with Figures[high(Figures)] do begin
-    SetLength(Points,length(Points)+1);
+    SetLength(Points,length(Points)+2); //сразу ставим длину в 2 элемента
+    Points[low(Points)] := Point;
     Points[high(Points)] := Point;
   end;
 end;
