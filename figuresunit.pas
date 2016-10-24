@@ -13,7 +13,7 @@ type
     procedure Draw(Canvas: TCanvas); virtual; abstract;
   public
     Points: array of TPoint;
-    Color: TColor;
+    Color1,Color2: TColor;
   end;
 
   TPolyline = class(TFigure)
@@ -26,21 +26,43 @@ type
     procedure Draw(Canvas:TCanvas); override;
   end;
 
+  TEllipse = class(TFigure)
+  public
+    procedure Draw(Canvas:TCanvas); override;
+  end;
+
+  TLine = class(TFigure)
+  public
+    procedure Draw(Canvas:TCanvas); override;
+  end;
+
 implementation
 
 procedure TPolyline.Draw(Canvas: TCanvas);
 begin
-    Canvas.Pen.Color := Color;
-    Canvas.Polyline(Points,0,high(Points)-1);
+  Canvas.Pen.Color := Color1;
+  Canvas.Polyline(Points,0,high(Points)-1);
 end;
 
 procedure TRectangle.Draw(Canvas: TCanvas);
 begin
-    Canvas.Brush.Color := clRed;
-    Canvas.Pen.Color := clBlack;
-    Canvas.Rectangle(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
+  Canvas.Pen.Color := Color1;
+  Canvas.Brush.Color := Color2;
+  Canvas.Rectangle(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
 end;
 
+procedure TEllipse.Draw(Canvas: TCanvas);
+begin
+  Canvas.Pen.Color := Color1;
+  Canvas.Brush.Color := Color2;
+  Canvas.Ellipse(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
+end;
+
+procedure TLine.Draw(Canvas: TCanvas);
+begin
+  Canvas.Pen.Color := Color1;
+  Canvas.Line(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
+end;
 
 initialization
 end.

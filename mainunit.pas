@@ -9,14 +9,12 @@ uses
   ExtCtrls, StdCtrls, ColorPalette,AboutUnit,FiguresUnit,ToolsUnit;
 
 type
-    {TPolyline = record
-      Points: array of TPoint;
-      Color: TColor;
-    end;}
 
   { TMainForm }
 
   TMainForm = class(TForm)
+    ColorLabel1: TLabel;
+    ColorLabel2: TLabel;
     MainColorPalette: TColorPalette;
     MainMenu: TMainMenu;
     FileSubMenu: TMenuItem;
@@ -26,11 +24,16 @@ type
     MainPaintBox: TPaintBox;
     PaintPanel: TPanel;
     InstrumentsRadioGroup: TRadioGroup;
+    ColorsPanel: TPanel;
     PolylineToolButton: TRadioButton;
+    LineToolButton: TRadioButton;
+    EllipseToolButton: TRadioButton;
     RectangleToolButton: TRadioButton;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure EllipseToolButtonChange(Sender: TObject);
     procedure ExitMenuItemClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
+    procedure LineToolButtonChange(Sender: TObject);
     procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
       Shift: TShiftState);
     procedure MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -51,7 +54,6 @@ type
 var
   MainForm: TMainForm;
   Figures: array of TFigure;
-  ColorWasChanged: boolean;
   Color1,Color2: TColor;
 implementation
 
@@ -71,13 +73,10 @@ end;
 procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 begin
-  if (ColorWasChanged = false) then
-  begin
-    setlength(Figures,length(Figures)+1);
-    Figures[high(Figures)] := TPolyline.Create;
-  end;
-  Figures[high(Figures)].Color := AColor;
-  ColorWasChanged := true;
+  if (ssLeft in Shift) then color1 := AColor;
+  if (ssRight in Shift) then color2 := AColor;
+  ColorLabel1.Color := color1;
+  ColorLabel2.Color := color2;
 end;
 
 procedure TMainForm.ExitMenuItemClick(Sender: TObject);
@@ -89,11 +88,23 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   PolylineToolButtonClick(self);
   PolylineToolButton.Checked := true;
+  ColorLabel1.Color := color1;
+  ColorLabel2.Color := color2;
+end;
+
+procedure TMainForm.LineToolButtonChange(Sender: TObject);
+begin
+  CurrentTool := TLineTool.Create;
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
 begin
   AboutForm.ShowModal;
+end;
+
+procedure TMainForm.EllipseToolButtonChange(Sender: TObject);
+begin
+  CurrentTool := TEllipseTool.Create;
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,

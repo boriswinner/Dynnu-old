@@ -1,7 +1,7 @@
 object MainForm: TMainForm
-  Left = 568
+  Left = 394
   Height = 495
-  Top = 245
+  Top = 202
   Width = 640
   Caption = 'Dynnu'
   ClientHeight = 475
@@ -10,33 +10,20 @@ object MainForm: TMainForm
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.6.0.4'
-  object MainColorPalette: TColorPalette
-    Left = 544
-    Height = 475
-    Top = 0
-    Width = 96
-    ButtonHeight = 12
-    ButtonWidth = 12
-    ColumnCount = 8
-    PickedIndex = 0
-    OnColorPick = MainColorPaletteColorPick
-    Align = alRight
-    ParentColor = False
-  end
   object PaintPanel: TPanel
     Left = 0
     Height = 475
     Top = 0
-    Width = 359
+    Width = 503
     Align = alClient
     ClientHeight = 475
-    ClientWidth = 359
+    ClientWidth = 503
     TabOrder = 0
     object MainPaintBox: TPaintBox
       Left = 1
       Height = 473
       Top = 1
-      Width = 357
+      Width = 501
       Align = alClient
       Color = clWhite
       ParentColor = False
@@ -46,13 +33,13 @@ object MainForm: TMainForm
     end
   end
   object InstrumentsRadioGroup: TRadioGroup
-    Left = 359
+    Left = 503
     Height = 475
     Top = 0
-    Width = 185
+    Width = 89
     Align = alRight
     AutoFill = True
-    Caption = 'InstrumentsRadioGroup'
+    Caption = 'Instruments'
     ChildSizing.LeftRightSpacing = 6
     ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
     ChildSizing.EnlargeVertical = crsHomogenousChildResize
@@ -61,25 +48,85 @@ object MainForm: TMainForm
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
     ClientHeight = 455
-    ClientWidth = 181
+    ClientWidth = 85
     TabOrder = 1
     object PolylineToolButton: TRadioButton
       Left = 6
-      Height = 228
+      Height = 114
       Top = 0
-      Width = 169
-      Caption = 'PolylineToolButton'
+      Width = 73
+      Caption = 'Polyline'
       OnClick = PolylineToolButtonClick
       TabOrder = 0
     end
     object RectangleToolButton: TRadioButton
       Left = 6
-      Height = 227
-      Top = 228
-      Width = 169
-      Caption = 'RectangleToolButton'
+      Height = 114
+      Top = 114
+      Width = 73
+      Caption = 'Rectangle'
       OnChange = RectangleToolButtonChange
       TabOrder = 1
+    end
+    object LineToolButton: TRadioButton
+      Left = 6
+      Height = 114
+      Top = 228
+      Width = 73
+      Caption = 'Line'
+      OnChange = LineToolButtonChange
+      TabOrder = 2
+    end
+    object EllipseToolButton: TRadioButton
+      Left = 6
+      Height = 113
+      Top = 342
+      Width = 73
+      Caption = 'Ellipse'
+      OnChange = EllipseToolButtonChange
+      TabOrder = 3
+    end
+  end
+  object ColorsPanel: TPanel
+    Left = 592
+    Height = 475
+    Top = 0
+    Width = 48
+    Align = alRight
+    ClientHeight = 475
+    ClientWidth = 48
+    TabOrder = 2
+    object ColorLabel1: TLabel
+      Left = 1
+      Height = 15
+      Top = 444
+      Width = 46
+      Align = alBottom
+      Caption = '   '
+      ParentColor = False
+    end
+    object MainColorPalette: TColorPalette
+      Left = 1
+      Height = 443
+      Top = 1
+      Width = 46
+      ButtonHeight = 12
+      ButtonWidth = 12
+      ColumnCount = 4
+      PaletteKind = pkExtendedPalette
+      PickedIndex = 0
+      OnColorPick = MainColorPaletteColorPick
+      Align = alRight
+      ParentColor = False
+    end
+    object ColorLabel2: TLabel
+      Left = 1
+      Height = 15
+      Top = 459
+      Width = 46
+      Align = alBottom
+      Caption = '   '
+      ParentColor = False
     end
   end
   object MainMenu: TMainMenu
