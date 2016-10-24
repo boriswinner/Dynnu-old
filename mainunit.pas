@@ -6,8 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, ColorPalette,
-  AboutUnit,FiguresUnit;
+  ExtCtrls, StdCtrls, ColorPalette,AboutUnit,FiguresUnit,ToolsUnit;
 
 type
     {TPolyline = record
@@ -26,6 +25,9 @@ type
     AboutMenuItem: TMenuItem;
     MainPaintBox: TPaintBox;
     PaintPanel: TPanel;
+    InstrumentsRadioGroup: TRadioGroup;
+    PolylineToolButton: TRadioButton;
+    RectangleToolButton: TRadioButton;
     procedure AboutMenuItemClick(Sender: TObject);
     procedure ExitMenuItemClick(Sender: TObject);
     procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
@@ -37,8 +39,9 @@ type
     procedure MainPaintBoxPaint(Sender: TObject);
   private
     { private declarations }
-    Polylines: array of TPolyline;
+    Figures: array of TPolyline;
     ColorWasChanged: boolean;
+    Tools: array of TTool;
   public
     { public declarations }
   end;
@@ -56,26 +59,27 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   begin
-    //if (ColorWasChanged = false) then
-    begin
-      SetLength(Polylines,length(Polylines)+1);
-      Polylines[high(Polylines)] := TPolyline.Create;
-      //Polylines[high(Polylines)].Color := Polylines[high(Polylines)-1].Color;
-    end;
+    SetLength(Figures,length(Figures)+1);
+    Figures[high(Figures)] := TPolyline.Create;
+    if (length(Figures) >= 2) then Figures[high(Figures)].Color := Figures[high(Figures)-1].Color;
     ColorWasChanged := false;
-    with Polylines[high(Polylines)] do begin
+    with Figures[high(Figures)] do begin
       SetLength(Points,length(Points)+1);
       Points[high(Points)] := Point(X,Y);
     end;
-    //Invalidate;
+    Invalidate;
   end;
 end;
 
 procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 begin
-  if (ColorWasChanged = false) then setlength(Polylines,length(Polylines)+1);
-  Polylines[high(Polylines)].Color := AColor;
+  if (ColorWasChanged = false) then
+  begin
+    setlength(Figures,length(Figures)+1);
+    Figures[high(Figures)] := TPolyline.Create;
+  end;
+  Figures[high(Figures)].Color := AColor;
   ColorWasChanged := true;
 end;
 
@@ -94,7 +98,7 @@ procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X
 begin
   if (ssLeft in Shift) then
   begin
-    with Polylines[high(Polylines)] do begin
+    with Figures[high(Figures)] do begin
       SetLength(Points,length(Points)+1);
       Points[high(Points)] := Point(X,Y);
     end;
@@ -104,12 +108,11 @@ end;
 
 procedure TMainForm.MainPaintBoxPaint(Sender: TObject);
 var
-i,j: integer;
+  i,j: integer;
 begin
-  for i := 0 to high(Polylines) do
+  for i := 0 to high(Figures) do
   begin
-    Canvas.Pen.Color := Polylines[i].Color;
-    Canvas.Polyline(Polylines[i].Points,0,high(Polylines[i].Points)-1);
+    Figures[i].Draw(MainPaintBox.Canvas);
   end;
 end;
 

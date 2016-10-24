@@ -10,10 +10,10 @@ object MainForm: TMainForm
   Position = poScreenCenter
   LCLVersion = '1.6.0.4'
   object MainColorPalette: TColorPalette
-    Left = 550
+    Left = 544
     Height = 480
     Top = 0
-    Width = 90
+    Width = 96
     ButtonHeight = 12
     ButtonWidth = 12
     ColumnCount = 8
@@ -26,22 +26,57 @@ object MainForm: TMainForm
     Left = 0
     Height = 480
     Top = 0
-    Width = 550
+    Width = 359
     Align = alClient
     ClientHeight = 480
-    ClientWidth = 550
+    ClientWidth = 359
     TabOrder = 0
     object MainPaintBox: TPaintBox
       Left = 1
       Height = 478
       Top = 1
-      Width = 548
+      Width = 357
       Align = alClient
       Color = clWhite
       ParentColor = False
       OnMouseDown = MainPaintBoxMouseDown
       OnMouseMove = MainPaintBoxMouseMove
       OnPaint = MainPaintBoxPaint
+    end
+  end
+  object InstrumentsRadioGroup: TRadioGroup
+    Left = 359
+    Height = 480
+    Top = 0
+    Width = 185
+    Align = alRight
+    AutoFill = True
+    Caption = 'InstrumentsRadioGroup'
+    ChildSizing.LeftRightSpacing = 6
+    ChildSizing.EnlargeHorizontal = crsHomogenousChildResize
+    ChildSizing.EnlargeVertical = crsHomogenousChildResize
+    ChildSizing.ShrinkHorizontal = crsScaleChilds
+    ChildSizing.ShrinkVertical = crsScaleChilds
+    ChildSizing.Layout = cclLeftToRightThenTopToBottom
+    ChildSizing.ControlsPerLine = 1
+    ClientHeight = 460
+    ClientWidth = 181
+    TabOrder = 1
+    object PolylineToolButton: TRadioButton
+      Left = 6
+      Height = 230
+      Top = 0
+      Width = 169
+      Caption = 'PolylineToolButton'
+      TabOrder = 0
+    end
+    object RectangleToolButton: TRadioButton
+      Left = 6
+      Height = 230
+      Top = 230
+      Width = 169
+      Caption = 'RectangleToolButton'
+      TabOrder = 1
     end
   end
   object MainMenu: TMainMenu

@@ -6,38 +6,38 @@ interface
 
 uses
   Classes, SysUtils, Graphics;
-
 type
 
-  TFigure = class(TPersistent)
+  TFigure = class
     //procedure Draw(Canvas: TCanvas); virtual;
-  public
-    Points: array of TPoint;
+    public
+      Points: array of TPoint;
+      Color: TColor;
   end;
 
   TPolyline = class(TFigure)
-    //procedure Draw(Canvas:TCanvas); override;
-  private
-  protected
-  public
-    //Points: array of TPoint;
-    Color: TColor;
+    procedure Draw(Canvas:TCanvas); //override;
+    private
+    protected
+    public
   end;
 
-var
-  Figures: array of TFigure;
+  TRectangle = class(TFigure)
+    private
+    protected
+    public
+  end;
+
 implementation
 
-//procedure TPolyline.Draw(Canvas: TCanvas);
-{var
+
+procedure TPolyline.Draw(Canvas: TCanvas);
+var
   i,j: integer;
 begin
-  for i := 0 to high(Polylines) do
-  begin
-    Canvas.Pen.Color := Polylines[i].Color;
-    Canvas.Polyline(Polylines[i].Points,0,high(Polylines[i].Points)-1);
-  end;}
-//end;
-
+    Canvas.Pen.Color := Color;
+    Canvas.Polyline(Points,0,high(Points)-1);
+end;
+initialization
 end.
 
