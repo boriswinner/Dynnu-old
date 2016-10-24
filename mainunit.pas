@@ -37,18 +37,20 @@ type
     procedure MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure MainPaintBoxPaint(Sender: TObject);
+    procedure PolylineToolButtonClick(Sender: TObject);
+    procedure RectangleToolButtonChange(Sender: TObject);
   private
     { private declarations }
-    Figures: array of TPolyline;
-    ColorWasChanged: boolean;
     Tools: array of TTool;
+    CurrentTool: TTool;
   public
     { public declarations }
   end;
 
 var
   MainForm: TMainForm;
-
+  Figures: array of TFigure;
+  ColorWasChanged: boolean;
 implementation
 
 {$R *.lfm}
@@ -108,12 +110,22 @@ end;
 
 procedure TMainForm.MainPaintBoxPaint(Sender: TObject);
 var
-  i,j: integer;
+  i: integer;
 begin
   for i := 0 to high(Figures) do
   begin
     Figures[i].Draw(MainPaintBox.Canvas);
   end;
+end;
+
+procedure TMainForm.PolylineToolButtonClick(Sender: TObject);
+begin
+  CurrentTool := TPolylineTool.Create;
+end;
+
+procedure TMainForm.RectangleToolButtonChange(Sender: TObject);
+begin
+  CurrentTool := TRectangleTool.Create;
 end;
 
 end.
