@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, ColorPalette;
+  ExtCtrls, StdCtrls, ColorPalette,AboutUnit;
 
 type
     TPolyline = record
@@ -57,12 +57,14 @@ begin
   begin
     if (ColorWasChanged = false) then
     begin
-      setlength(Polylines,length(Polylines)+1);
+      SetLength(Polylines,length(Polylines)+1);
       Polylines[high(Polylines)].Color := Polylines[high(Polylines)-1].Color;
     end;
     ColorWasChanged := false;
-    setlength(Polylines[high(Polylines)].Points,length(Polylines[high(Polylines)].Points)+1);
-    Polylines[high(Polylines)].Points[high(Polylines[high(Polylines)].Points)] := Point(X,Y);
+    with Polylines[high(Polylines)] do begin
+      SetLength(Points,length(Points)+1);
+      Points[high(Points)] := Point(X,Y);
+    end;
     Invalidate;
   end;
 end;
@@ -72,7 +74,6 @@ procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
 begin
   if (ColorWasChanged = false) then setlength(Polylines,length(Polylines)+1);
   Polylines[high(Polylines)].Color := AColor;
-  //MainPaintBox.Canvas.Pen.Color := AColor;
   ColorWasChanged := true;
 end;
 
@@ -83,7 +84,7 @@ end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
 begin
-  ShowMessage('Boris Timofeenko, b8103a');
+  AboutForm.ShowModal;
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -91,8 +92,10 @@ procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X
 begin
   if (ssLeft in Shift) then
   begin
-    setlength(Polylines[high(Polylines)].Points,length(Polylines[high(Polylines)].Points)+1);
-    Polylines[high(Polylines)].Points[high(Polylines[high(Polylines)].Points)] := Point(X,Y);
+    with Polylines[high(Polylines)] do begin
+      SetLength(Points,length(Points)+1);
+      Points[high(Points)] := Point(X,Y);
+    end;
     Invalidate;
   end;
 end;
@@ -103,13 +106,11 @@ var
 begin
   for i := 0 to high(Polylines) do
   begin
-    for j := 0 to high(Polylines[i].Points)-1 do
-    begin
-      MainPaintBox.Canvas.Pen.Color := Polylines[i].Color;
-      MainPaintBox.Canvas.Line(Polylines[i].Points[j],Polylines[i].Points[j+1]);
-    end;
+    MainPaintBox.Canvas.Pen.Color := Polylines[i].Color;
+    MainPaintBox.Canvas.Polyline(Polylines[i].Points,0,high(Polylines[i].Points)-1);
   end;
 end;
 
 end.
-
+//Pascal тип Polyline
+//улучшить код
