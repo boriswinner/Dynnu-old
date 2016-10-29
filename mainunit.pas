@@ -47,6 +47,7 @@ type
     { private declarations }
     Tools: array of TTool;
     CurrentTool: TTool;
+    CurrentFigure: TFigure;
   public
     { public declarations }
   end;
@@ -54,7 +55,7 @@ type
 var
   MainForm: TMainForm;
   Figures: array of TFigure;
-  Color1,Color2: TColor;
+  PenColor,BrushColor: TColor;
 implementation
 
 {$R *.lfm}
@@ -65,7 +66,7 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   begin
-    CurrentTool.FigureCreate(Point(X,Y));
+    CurrentTool.FigureCreate(CurrentFigure,Point(X,Y),PenColor,BrushColor);
     Invalidate;
   end;
 end;
@@ -73,10 +74,10 @@ end;
 procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
   Shift: TShiftState);
 begin
-  if (ssLeft in Shift) then color1 := AColor;
-  if (ssRight in Shift) then color2 := AColor;
-  ColorLabel1.Color := color1;
-  ColorLabel2.Color := color2;
+  if (ssLeft in Shift) then PenColor := AColor;
+  if (ssRight in Shift) then BrushColor := AColor;
+  ColorLabel1.Color := PenColor;
+  ColorLabel2.Color := BrushColor;
 end;
 
 procedure TMainForm.ExitMenuItemClick(Sender: TObject);
@@ -88,13 +89,14 @@ procedure TMainForm.FormCreate(Sender: TObject);
 begin
   PolylineToolButtonClick(self);
   PolylineToolButton.Checked := true;
-  ColorLabel1.Color := color1;
-  ColorLabel2.Color := color2;
+  ColorLabel1.Color := PenColor;
+  ColorLabel2.Color := BrushColor;
 end;
 
 procedure TMainForm.LineToolButtonChange(Sender: TObject);
 begin
   CurrentTool := TLineTool.Create;
+  CurrentFigure := TLine.Create;
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -105,6 +107,7 @@ end;
 procedure TMainForm.EllipseToolButtonChange(Sender: TObject);
 begin
   CurrentTool := TEllipseTool.Create;
+  CurrentFigure := TEllipse.Create;
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -130,11 +133,13 @@ end;
 procedure TMainForm.PolylineToolButtonClick(Sender: TObject);
 begin
   CurrentTool := TPolylineTool.Create;
+  CurrentFigure := TPolyline.Create;
 end;
 
 procedure TMainForm.RectangleToolButtonChange(Sender: TObject);
 begin
   CurrentTool := TRectangleTool.Create;
+  CurrentFigure := TRectangle.Create;
 end;
 
 end.

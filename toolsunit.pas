@@ -5,117 +5,64 @@ unit toolsunit;
 interface
 
 uses
-  Classes, SysUtils;
+  Classes, SysUtils, Graphics, FiguresUnit;
 
 type
 
   TTool = class
   public
-    procedure FigureCreate(Point: TPoint); virtual; abstract;
-    procedure AddPoint(Point: TPoint); virtual; abstract;
+    procedure FigureCreate(AFigure: TFigure; APoint: TPoint; APenColor,ABrushColor: TColor);
+    procedure AddPoint(Point: TPoint); virtual;
+  end;
+
+  TTwoPointsTools = class(TTool)
+  public
+    procedure AddPoint(Point: TPoint); override;
   end;
 
   TPolylineTool = class(TTool)
-  public
-    procedure FigureCreate(Point: TPoint); override;
-    procedure AddPoint(Point: TPoint); override;
+    Figure: TPolyline;
   end;
 
-  TRectangleTool = class(TTool)
-  public
-    procedure FigureCreate(Point: TPoint); override;
-    procedure AddPoint(Point: TPoint); override;
+  TRectangleTool = class(TTwoPointsTools)
+    Figure: TRectangle;
   end;
 
-  TEllipseTool = class(TTool)
-  public
-    procedure FigureCreate(Point: TPoint); override;
-    procedure AddPoint(Point: TPoint); override;
+  TEllipseTool = class(TTwoPointsTools)
+    Figure: TEllipse;
   end;
 
-  TLineTool = class(TTool)
-  public
-    procedure FigureCreate(Point: TPoint); override;
-    procedure AddPoint(Point: TPoint); override;
+  TLineTool = class(TTwoPointsTools)
+    Figure: TLine;
   end;
 implementation
-uses MainUnit, FiguresUnit, Controls;
+uses MainUnit, Controls;
 
-procedure TPolylineTool.FigureCreate(Point: TPoint);
+procedure TTool.FigureCreate(AFigure: TFigure; APoint: TPoint; APenColor,ABrushColor: TColor);
 begin
   SetLength(Figures,length(Figures)+1);
-  Figures[high(Figures)] := TPolyline.Create;
-  Figures[high(Figures)].Color1 := Color1;
+  Figures[high(Figures)] := AFigure.Create;
+  Figures[high(Figures)].FigurePenColor := APenColor;
+  Figures[high(Figures)].FigureBrushColor := ABrushColor;
+  with Figures[high(Figures)] do begin
+    SetLength(Points,1);
+    Points[high(Points)] := APoint;
+  end;
+end;
+
+procedure TTool.AddPoint(APoint: TPoint);
+begin
   with Figures[high(Figures)] do begin
     SetLength(Points,length(Points)+1);
-    Points[high(Points)] := Point;
+    Points[high(Points)] := APoint;
   end;
 end;
 
-procedure TPolylineTool.AddPoint(Point: TPoint);
+procedure TTwoPointsTools.AddPoint(APoint: TPoint);
 begin
   with Figures[high(Figures)] do begin
-    SetLength(Points,length(Points)+1);
-    Points[high(Points)] := Point;
-  end;
-end;
-
-procedure TRectangleTool.FigureCreate(Point: TPoint);
-begin
-  SetLength(Figures,length(Figures)+1);
-  Figures[high(Figures)] := TRectangle.Create;
-  Figures[high(Figures)].Color1 := Color1;
-  Figures[high(Figures)].Color2 := Color2;
-  with Figures[high(Figures)] do begin
-    SetLength(Points,length(Points)+2); //сразу ставим длину в 2 элемента
-    Points[low(Points)] := Point;
-    Points[high(Points)] := Point;
-  end;
-end;
-
-procedure TRectangleTool.AddPoint(Point: TPoint);
-begin
-  with Figures[high(Figures)] do begin
-    Points[high(Points)] := Point;
-  end;
-end;
-
-procedure TEllipseTool.FigureCreate(Point: TPoint);
-begin
-  SetLength(Figures,length(Figures)+1);
-  Figures[high(Figures)] := TEllipse.Create;
-  Figures[high(Figures)].Color1 := Color1;
-  Figures[high(Figures)].Color2 := Color2;
-  with Figures[high(Figures)] do begin
-    SetLength(Points,length(Points)+2); //сразу ставим длину в 2 элемента
-    Points[low(Points)] := Point;
-    Points[high(Points)] := Point;
-  end;
-end;
-
-procedure TEllipseTool.AddPoint(Point: TPoint);
-begin
-  with Figures[high(Figures)] do begin
-    Points[high(Points)] := Point;
-  end;
-end;
-
-procedure TLineTool.FigureCreate(Point: TPoint);
-begin
-  SetLength(Figures,length(Figures)+1);
-  Figures[high(Figures)] := TLine.Create;
-  Figures[high(Figures)].Color1 := Color1;
-  with Figures[high(Figures)] do begin
-    SetLength(Points,length(Points)+2); //сразу ставим длину в 2 элемента
-    Points[low(Points)] := Point;
-    Points[high(Points)] := Point;
-  end;
-end;
-
-procedure TLineTool.AddPoint(Point: TPoint);
-begin
-  with Figures[high(Figures)] do begin
-    Points[high(Points)] := Point;
+    SetLength(Points,2);
+    Points[high(Points)] := APoint;
   end;
 end;
 end.
