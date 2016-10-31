@@ -1,29 +1,29 @@
 object MainForm: TMainForm
-  Left = 620
-  Height = 495
-  Top = 407
+  Left = 596
+  Height = 501
+  Top = 87
   Width = 640
   Caption = 'Dynnu'
-  ClientHeight = 475
+  ClientHeight = 481
   ClientWidth = 640
   Menu = MainMenu
   OnCreate = FormCreate
   Position = poScreenCenter
   LCLVersion = '1.6.0.4'
   object PaintPanel: TPanel
-    Left = 0
-    Height = 475
+    Left = 200
+    Height = 481
     Top = 0
-    Width = 503
+    Width = 303
     Align = alClient
-    ClientHeight = 475
-    ClientWidth = 503
+    ClientHeight = 481
+    ClientWidth = 303
     TabOrder = 0
     object MainPaintBox: TPaintBox
       Left = 1
-      Height = 473
+      Height = 479
       Top = 1
-      Width = 501
+      Width = 301
       Align = alClient
       Color = clWhite
       ParentColor = False
@@ -34,7 +34,7 @@ object MainForm: TMainForm
   end
   object InstrumentsRadioGroup: TRadioGroup
     Left = 503
-    Height = 475
+    Height = 481
     Top = 0
     Width = 89
     Align = alRight
@@ -47,12 +47,12 @@ object MainForm: TMainForm
     ChildSizing.ShrinkVertical = crsScaleChilds
     ChildSizing.Layout = cclLeftToRightThenTopToBottom
     ChildSizing.ControlsPerLine = 1
-    ClientHeight = 455
+    ClientHeight = 461
     ClientWidth = 85
     TabOrder = 1
     object PolylineToolButton: TRadioButton
       Left = 6
-      Height = 114
+      Height = 116
       Top = 0
       Width = 73
       Caption = 'Polyline'
@@ -61,8 +61,8 @@ object MainForm: TMainForm
     end
     object RectangleToolButton: TRadioButton
       Left = 6
-      Height = 114
-      Top = 114
+      Height = 116
+      Top = 116
       Width = 73
       Caption = 'Rectangle'
       OnChange = RectangleToolButtonChange
@@ -70,8 +70,8 @@ object MainForm: TMainForm
     end
     object LineToolButton: TRadioButton
       Left = 6
-      Height = 114
-      Top = 228
+      Height = 116
+      Top = 232
       Width = 73
       Caption = 'Line'
       OnChange = LineToolButtonChange
@@ -80,7 +80,7 @@ object MainForm: TMainForm
     object EllipseToolButton: TRadioButton
       Left = 6
       Height = 113
-      Top = 342
+      Top = 348
       Width = 73
       Caption = 'Ellipse'
       OnChange = EllipseToolButtonChange
@@ -89,17 +89,17 @@ object MainForm: TMainForm
   end
   object ColorsPanel: TPanel
     Left = 592
-    Height = 475
+    Height = 481
     Top = 0
     Width = 48
     Align = alRight
-    ClientHeight = 475
+    ClientHeight = 481
     ClientWidth = 48
     TabOrder = 2
     object ColorLabel1: TLabel
       Left = 1
       Height = 15
-      Top = 444
+      Top = 450
       Width = 46
       Align = alBottom
       Caption = '   '
@@ -107,7 +107,7 @@ object MainForm: TMainForm
     end
     object MainColorPalette: TColorPalette
       Left = 1
-      Height = 443
+      Height = 449
       Top = 1
       Width = 46
       ButtonHeight = 12
@@ -122,12 +122,28 @@ object MainForm: TMainForm
     object ColorLabel2: TLabel
       Left = 1
       Height = 15
-      Top = 459
+      Top = 465
       Width = 46
       Align = alBottom
       Caption = '   '
       ParentColor = False
     end
+  end
+  object ColorsGrid: TDrawGrid
+    Left = 0
+    Height = 481
+    Top = 0
+    Width = 200
+    Align = alLeft
+    ColCount = 3
+    ExtendedSelect = False
+    FixedCols = 0
+    FixedRows = 0
+    RowCount = 2
+    TabOrder = 3
+    OnDblClick = ColorsGridDblClick
+    OnDrawCell = ColorsGridDrawCell
+    OnMouseDown = ColorsGridMouseDown
   end
   object MainMenu: TMainMenu
     left = 24
@@ -145,5 +161,32 @@ object MainForm: TMainForm
         OnClick = AboutMenuItemClick
       end
     end
+  end
+  object ColorsGridColorDialog: TColorDialog
+    Color = clBlack
+    CustomColors.Strings = (
+      'ColorA=000000'
+      'ColorB=000080'
+      'ColorC=008000'
+      'ColorD=008080'
+      'ColorE=800000'
+      'ColorF=800080'
+      'ColorG=808000'
+      'ColorH=808080'
+      'ColorI=C0C0C0'
+      'ColorJ=0000FF'
+      'ColorK=00FF00'
+      'ColorL=00FFFF'
+      'ColorM=FF0000'
+      'ColorN=FF00FF'
+      'ColorO=FFFF00'
+      'ColorP=FFFFFF'
+      'ColorQ=C0DCC0'
+      'ColorR=F0CAA6'
+      'ColorS=F0FBFF'
+      'ColorT=A4A0A0'
+    )
+    left = 24
+    top = 56
   end
 end

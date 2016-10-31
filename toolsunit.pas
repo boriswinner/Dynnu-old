@@ -67,5 +67,8 @@ begin
     Points[high(Points)] := APoint;
   end;
 end;
+
+initialization
+//RegisterTool()
 end.
 
