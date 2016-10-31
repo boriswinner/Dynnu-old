@@ -9,6 +9,7 @@ uses
   ExtCtrls, StdCtrls, ColorPalette,AboutUnit,FiguresUnit,ToolsUnit;
 
 type
+  TFigureClass = class  of TFigure;
 
   { TMainForm }
 
@@ -47,7 +48,7 @@ type
     { private declarations }
     Tools: array of TTool;
     CurrentTool: TTool;
-    CurrentFigure: TFigure;
+    CurrentFigure: TFigureClass;
   public
     { public declarations }
   end;
@@ -96,7 +97,7 @@ end;
 procedure TMainForm.LineToolButtonChange(Sender: TObject);
 begin
   CurrentTool := TLineTool.Create;
-  CurrentFigure := TLine.Create;
+  CurrentFigure := TLine;
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -107,7 +108,7 @@ end;
 procedure TMainForm.EllipseToolButtonChange(Sender: TObject);
 begin
   CurrentTool := TEllipseTool.Create;
-  CurrentFigure := TEllipse.Create;
+  CurrentFigure := TEllipse;
 end;
 
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
@@ -133,13 +134,13 @@ end;
 procedure TMainForm.PolylineToolButtonClick(Sender: TObject);
 begin
   CurrentTool := TPolylineTool.Create;
-  CurrentFigure := TPolyline.Create;
+  CurrentFigure := TPolyline;
 end;
 
 procedure TMainForm.RectangleToolButtonChange(Sender: TObject);
 begin
   CurrentTool := TRectangleTool.Create;
-  CurrentFigure := TRectangle.Create;
+  CurrentFigure := TRectangle;
 end;
 
 end.

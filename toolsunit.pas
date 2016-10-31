@@ -8,16 +8,17 @@ uses
   Classes, SysUtils, Graphics, FiguresUnit;
 
 type
+  TFigureClass = class  of TFigure;
 
   TTool = class
   public
-    procedure FigureCreate(AFigure: TFigure; APoint: TPoint; APenColor,ABrushColor: TColor);
-    procedure AddPoint(Point: TPoint); virtual;
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
+    procedure AddPoint(APoint: TPoint); virtual;
   end;
 
   TTwoPointsTools = class(TTool)
   public
-    procedure AddPoint(Point: TPoint); override;
+    procedure AddPoint(APoint: TPoint); override;
   end;
 
   TPolylineTool = class(TTool)
@@ -38,10 +39,10 @@ type
 implementation
 uses MainUnit, Controls;
 
-procedure TTool.FigureCreate(AFigure: TFigure; APoint: TPoint; APenColor,ABrushColor: TColor);
+procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
 begin
   SetLength(Figures,length(Figures)+1);
-  Figures[high(Figures)] := AFigure.Create;
+  Figures[high(Figures)] := AFigureClass.Create;
   Figures[high(Figures)].FigurePenColor := APenColor;
   Figures[high(Figures)].FigureBrushColor := ABrushColor;
   with Figures[high(Figures)] do begin
