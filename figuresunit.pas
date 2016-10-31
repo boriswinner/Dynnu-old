@@ -47,14 +47,14 @@ end;
 procedure TRectangle.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
-  Canvas.Brush.Color := FigurePenColor;
+  Canvas.Brush.Color := FigureBrushColor;
   Canvas.Rectangle(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
 end;
 
 procedure TEllipse.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
-  Canvas.Brush.Color := FigurePenColor;
+  Canvas.Brush.Color := FigureBrushColor;
   Canvas.Ellipse(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
 end;
 

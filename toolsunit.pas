@@ -5,7 +5,8 @@ unit toolsunit;
 interface
 
 uses
-  Classes, SysUtils, Graphics, FiguresUnit;
+  Classes, SysUtils, Graphics,
+  figuresunit;
 
 type
   TFigureClass = class  of TFigure;
@@ -37,15 +38,15 @@ type
     Figure: TLine;
   end;
 implementation
-uses MainUnit, Controls;
+uses mainunit, Controls;
 
 procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
 begin
   SetLength(Figures,length(Figures)+1);
   Figures[high(Figures)] := AFigureClass.Create;
-  Figures[high(Figures)].FigurePenColor := APenColor;
-  Figures[high(Figures)].FigureBrushColor := ABrushColor;
   with Figures[high(Figures)] do begin
+    FigurePenColor := APenColor;
+    FigureBrushColor := ABrushColor;
     SetLength(Points,1);
     Points[high(Points)] := APoint;
   end;

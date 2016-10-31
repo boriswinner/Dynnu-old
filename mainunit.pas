@@ -1,4 +1,4 @@
-unit MainUnit;
+unit mainunit;
 
 {$mode objfpc}{$H+}
 
@@ -6,10 +6,11 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, ColorPalette,AboutUnit,FiguresUnit,ToolsUnit;
+  ExtCtrls, StdCtrls, ColorPalette,
+  aboutunit,figuresunit,toolsunit;
 
 type
-  TFigureClass = class  of TFigure;
+  TFigureClass = toolsunit.TFigureClass;
 
   { TMainForm }
 
