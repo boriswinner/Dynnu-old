@@ -83,6 +83,7 @@ begin
   ColorLabel1.Color := PenColor;
   ColorLabel2.Color := BrushColor;
   ColorsGrid.Width := ColorsGrid.DefaultColWidth*ColorsGrid.ColCount+4;
+  ColorsPanel.Width := ColorsGrid.Width;
   AssignFile(ColorsFile,'colors.txt');
   reset(ColorsFile);
   while not eof(ColorsFile) do
