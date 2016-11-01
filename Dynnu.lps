@@ -8,12 +8,10 @@
       <Unit0>
         <Filename Value="Dynnu.pas"/>
         <IsPartOfProject Value="True"/>
-        <IsVisibleTab Value="True"/>
-        <EditorIndex Value="3"/>
+        <EditorIndex Value="-1"/>
         <WindowIndex Value="1"/>
-        <CursorPos X="70" Y="10"/>
-        <UsageCount Value="136"/>
-        <Loaded Value="True"/>
+        <CursorPos X="37" Y="11"/>
+        <UsageCount Value="137"/>
       </Unit0>
       <Unit1>
         <Filename Value="mainunit.pas"/>
@@ -22,9 +20,8 @@
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="37"/>
-        <CursorPos X="20" Y="58"/>
-        <UsageCount Value="136"/>
+        <CursorPos X="80"/>
+        <UsageCount Value="137"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
       </Unit1>
@@ -34,16 +31,17 @@
         <ComponentName Value="AboutForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UsageCount Value="82"/>
+        <UsageCount Value="83"/>
       </Unit2>
       <Unit3>
         <Filename Value="figuresunit.pas"/>
         <IsPartOfProject Value="True"/>
+        <IsVisibleTab Value="True"/>
         <EditorIndex Value="2"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="45"/>
-        <CursorPos X="40" Y="59"/>
-        <UsageCount Value="82"/>
+        <TopLine Value="34"/>
+        <CursorPos X="15" Y="43"/>
+        <UsageCount Value="83"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -51,9 +49,9 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="71"/>
-        <CursorPos X="9" Y="104"/>
-        <UsageCount Value="82"/>
+        <TopLine Value="75"/>
+        <CursorPos X="37" Y="52"/>
+        <UsageCount Value="83"/>
         <Loaded Value="True"/>
       </Unit4>
     </Units>
@@ -171,12 +169,12 @@
         <Caret Line="79" Column="87" TopLine="62"/>
       </Position28>
       <Position29>
-        <Filename Value="Dynnu.pas"/>
-        <Caret Line="9" Column="18"/>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="56" Column="20" TopLine="25"/>
       </Position29>
       <Position30>
-        <Filename Value="Dynnu.pas"/>
-        <Caret Line="10" Column="71"/>
+        <Filename Value="mainunit.pas"/>
+        <Caret Line="13" Column="25"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

@@ -10,7 +10,7 @@ uses
   aboutunit,figuresunit,toolsunit;
 
 type
-  TFigureClass = toolsunit.TFigureClass;
+  TFigureClass = figuresunit.TFigureClass;
 
   { TMainForm }
 
@@ -52,12 +52,8 @@ type
 
 var
   MainForm: TMainForm;
-  Figures: array of TFigure;
-  PenColor,BrushColor: TColor;
   Colors: array of TColor;
   ColorsFile: text;
-  ToolsRegister: array of TTool;
-  FiguresRegister: array of TFigureClass;
 implementation
 
 {$R *.lfm}
@@ -181,6 +177,3 @@ begin
 end;
 
 end.
-//не работает добавление Bitmap
-//не удается получить tag кнопки
-//улучшить положение дел с класс фигурес

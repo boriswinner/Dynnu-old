@@ -7,6 +7,7 @@ interface
 uses
   Classes, SysUtils, Graphics;
 type
+  TFigureClass = class  of TFigure;
 
   TFigure = class
   public
@@ -35,9 +36,12 @@ type
   public
     procedure Draw(Canvas:TCanvas); override;
   end;
-
+var
+  Figures: array of TFigure;
+  PenColor,BrushColor: TColor;
+  FiguresRegister: array of TFigureClass;
 implementation
-uses mainunit;
+
 procedure TPolyline.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;

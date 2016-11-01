@@ -9,7 +9,7 @@ uses
   figuresunit;
 
 type
-  TFigureClass = class  of TFigure;
+
   TToolClass =  class of TTool;
 
   TTool = class
@@ -43,8 +43,9 @@ type
 var
   BitmapFiles: array of string;
   ToolBitmapsFile: text;
+  ToolsRegister: array of TTool;
 implementation
-uses mainunit, Controls;
+uses Controls;
 
 procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
 begin
