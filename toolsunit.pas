@@ -10,11 +10,14 @@ uses
 
 type
   TFigureClass = class  of TFigure;
+  TToolClass =  class of TTool;
 
   TTool = class
+      Bitmap: TBitmap;
   public
     procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
     procedure AddPoint(APoint: TPoint); virtual;
+    procedure AddBitmap(s: string; AtoolClass: TToolClass);
   end;
 
   TTwoPointsTools = class(TTool)
@@ -37,6 +40,9 @@ type
   TLineTool = class(TTwoPointsTools)
     Figure: TLine;
   end;
+var
+  BitmapFiles: array of string;
+  ToolBitmapsFile: text;
 implementation
 uses mainunit, Controls;
 
@@ -68,7 +74,35 @@ begin
   end;
 end;
 
+procedure RegisterTool(ATool: TTool);
+begin
+  setlength(ToolsRegister,length(ToolsRegister)+1);
+  ToolsRegister[high(ToolsRegister)] := ATool;
+  ToolsRegister[high(ToolsRegister)].Bitmap := TBitmap.Create;
+  ToolsRegister[high(ToolsRegister)].Bitmap.LoadFromFile(BitmapFiles[high(ToolsRegister)]);
+end;
+
+procedure TTool.AddBitmap(s: string; AtoolClass: TToolClass);
+var
+  tool: TTool;
+begin
+  tool := AToolClass.Create;
+  tool.Bitmap := TBitmap.Create;
+  tool.Bitmap.LoadFromFile(s);
+end;
+
 initialization
-//RegisterTool()
+AssignFile(ToolBitmapsFile,'bitmaps.txt');
+reset(ToolBitmapsFile);
+while not eof(ToolBitmapsFile) do
+begin
+  setlength(BitmapFiles,length(BitmapFiles)+1);
+  readln(ToolBitmapsFile,BitmapFiles[high(BitmapFiles)]);
+end;
+CloseFile(ToolBitmapsFile);
+RegisterTool (TPolylineTool.Create);
+RegisterTool (TRectangleTool.Create);
+RegisterTool (TEllipseTool.Create);
+RegisterTool (TLineTool.Create);
 end.
 

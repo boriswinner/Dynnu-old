@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, Grids, ColorPalette,LCLIntf,LCLType,
+  ExtCtrls, StdCtrls, Grids, ColorPalette,LCLIntf,LCLType, Buttons,
   aboutunit,figuresunit,toolsunit;
 
 type
@@ -19,7 +19,6 @@ type
     ColorLabel1: TLabel;
     ColorLabel2: TLabel;
     ColorsGrid: TDrawGrid;
-    MainColorPalette: TColorPalette;
     MainMenu: TMainMenu;
     FileSubMenu: TMenuItem;
     HelpSubMenu: TMenuItem;
@@ -27,34 +26,24 @@ type
     AboutMenuItem: TMenuItem;
     MainPaintBox: TPaintBox;
     PaintPanel: TPanel;
-    InstrumentsRadioGroup: TRadioGroup;
     ColorsPanel: TPanel;
-    PolylineToolButton: TRadioButton;
-    LineToolButton: TRadioButton;
-    EllipseToolButton: TRadioButton;
-    RectangleToolButton: TRadioButton;
+    ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure ToolButtonClick(Sender: TObject);
     procedure ColorsGridDblClick(Sender: TObject);
     procedure ColorsGridDrawCell(Sender: TObject; aCol, aRow: Integer;
       aRect: TRect; aState: TGridDrawState);
     procedure ColorsGridMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
-    procedure EllipseToolButtonChange(Sender: TObject);
     procedure ExitMenuItemClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
-    procedure LineToolButtonChange(Sender: TObject);
-    procedure MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
-      Shift: TShiftState);
     procedure MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure MainPaintBoxPaint(Sender: TObject);
-    procedure PolylineToolButtonClick(Sender: TObject);
-    procedure RectangleToolButtonChange(Sender: TObject);
   private
     { private declarations }
-    Tools: array of TTool;
     CurrentTool: TTool;
     CurrentFigure: TFigureClass;
   public
@@ -63,15 +52,15 @@ type
 
 var
   MainForm: TMainForm;
-  ToolRegistry: array of TTool;
   Figures: array of TFigure;
   PenColor,BrushColor: TColor;
   Colors: array of TColor;
   ColorsFile: text;
+  ToolsRegister: array of TTool;
+  FiguresRegister: array of TFigureClass;
 implementation
 
 {$R *.lfm}
-
 { TMainForm }
 
 procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
@@ -83,21 +72,6 @@ begin
   end;
 end;
 
-procedure RegisterTool(ATool: TTool);
-begin
-  setlength(ToolRegistry,length(ToolRegistry)+1);
-  ToolRegistry[high(ToolRegistry)] := ATool;
-end;
-
-procedure TMainForm.MainColorPaletteColorPick(Sender: TObject; AColor: TColor;
-  Shift: TShiftState);
-begin
-  if (ssLeft in Shift) then PenColor := AColor;
-  if (ssRight in Shift) then BrushColor := AColor;
-  ColorLabel1.Color := PenColor;
-  ColorLabel2.Color := BrushColor;
-end;
-
 procedure TMainForm.ExitMenuItemClick(Sender: TObject);
 begin
   MainForm.Close;
@@ -106,9 +80,10 @@ end;
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   i: integer;
+  b: TBitBtn;
 begin
-  PolylineToolButtonClick(self);
-  PolylineToolButton.Checked := true;
+  CurrentTool := ToolsRegister[0];
+  CurrentFigure := FiguresRegister[0];
   ColorLabel1.Color := PenColor;
   ColorLabel2.Color := BrushColor;
   ColorsGrid.Width := ColorsGrid.DefaultColWidth*ColorsGrid.ColCount+4;
@@ -121,17 +96,35 @@ begin
   end;
   CloseFile(ColorsFile);
   ColorsGrid.RowCount := length(Colors) div 3;
-end;
-
-procedure TMainForm.LineToolButtonChange(Sender: TObject);
-begin
-  CurrentTool := TLineTool.Create;
-  CurrentFigure := TLine;
+  ToolsPanel.Width := 5 + 4*32 + 5;
+  for i := low(ToolsRegister) to high(ToolsRegister) do
+  begin
+    b := TBitBtn.Create(MainForm);
+    b.Parent := ToolsPanel;
+    b.name := 'ToolButton'+IntToStr(i+1);
+    b.Caption := '';
+    b.Tag := Integer(i);
+    b.Left := 5 + (i mod 4)*32;
+    b.Top  := 5 + (i div 4)*32;
+    b.Width := 32;
+    b.Height:= 32;
+    b.Glyph := ToolsRegister[i].Bitmap;
+    b.OnClick := @ToolButtonClick;
+  end;
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
 begin
   AboutForm.ShowModal;
+end;
+
+procedure TMainForm.ToolButtonClick(Sender: TObject);
+var
+  atag: integer;
+begin
+  atag := Integer((Sender as TBitBtn).Tag);
+  CurrentTool := ToolsRegister[atag];
+  CurrentFigure := FiguresRegister[atag];
 end;
 
 procedure TMainForm.ColorsGridDblClick(Sender: TObject);
@@ -167,12 +160,6 @@ begin
   ColorLabel2.Color := BrushColor;
 end;
 
-procedure TMainForm.EllipseToolButtonChange(Sender: TObject);
-begin
-  CurrentTool := TEllipseTool.Create;
-  CurrentFigure := TEllipse;
-end;
-
 procedure TMainForm.MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
   Y: Integer);
 begin
@@ -193,17 +180,7 @@ begin
   end;
 end;
 
-procedure TMainForm.PolylineToolButtonClick(Sender: TObject);
-begin
-  CurrentTool := TPolylineTool.Create;
-  CurrentFigure := TPolyline;
-end;
-
-procedure TMainForm.RectangleToolButtonChange(Sender: TObject);
-begin
-  CurrentTool := TRectangleTool.Create;
-  CurrentFigure := TRectangle;
-end;
-
 end.
-//улучшить код
+//не работает добавление Bitmap
+//не удается получить tag кнопки
+//улучшить положение дел с класс фигурес
