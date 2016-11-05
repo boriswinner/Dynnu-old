@@ -68,16 +68,6 @@ begin
   Canvas.Line(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
 end;
 
-procedure RegisterFigure(AFigure: TFigureClass);
-begin
-  setlength(FiguresRegister,length(FiguresRegister)+1);
-  FiguresRegister[high(FiguresRegister)] := AFigure;
-end;
-
 initialization
-RegisterFigure (TPolyline);
-RegisterFigure (TRectangle);
-RegisterFigure (TEllipse);
-RegisterFigure (TLine);
 end.
 

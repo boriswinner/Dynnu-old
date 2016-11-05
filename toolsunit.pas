@@ -10,14 +10,15 @@ uses
 
 type
 
+  TFigureClass = figuresunit.TFigureClass;
   TToolClass =  class of TTool;
 
   TTool = class
       Bitmap: TBitmap;
+      FigureClass: class of TFigure;
   public
     procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
     procedure AddPoint(APoint: TPoint); virtual;
-    procedure AddBitmap(s: string; AtoolClass: TToolClass);
   end;
 
   TTwoPointsTools = class(TTool)
@@ -41,8 +42,6 @@ type
     Figure: TLine;
   end;
 var
-  BitmapFiles: array of string;
-  ToolBitmapsFile: text;
   ToolsRegister: array of TTool;
 implementation
 uses Controls;
@@ -75,35 +74,21 @@ begin
   end;
 end;
 
-procedure RegisterTool(ATool: TTool);
+procedure RegisterTool(ATool: TTool; AFigureClass: TFigureClass; ABitmapFile: string);
 begin
   setlength(ToolsRegister,length(ToolsRegister)+1);
   ToolsRegister[high(ToolsRegister)] := ATool;
-  ToolsRegister[high(ToolsRegister)].Bitmap := TBitmap.Create;
-  ToolsRegister[high(ToolsRegister)].Bitmap.LoadFromFile(BitmapFiles[high(ToolsRegister)]);
-end;
-
-procedure TTool.AddBitmap(s: string; AtoolClass: TToolClass);
-var
-  tool: TTool;
-begin
-  tool := AToolClass.Create;
-  tool.Bitmap := TBitmap.Create;
-  tool.Bitmap.LoadFromFile(s);
+  with ToolsRegister[high(ToolsRegister)] do begin
+    Bitmap := TBitmap.Create;
+    Bitmap.LoadFromFile(ABitmapFile);
+    FigureClass := AFigureClass;
+  end;
 end;
 
 initialization
-AssignFile(ToolBitmapsFile,'bitmaps.txt');
-reset(ToolBitmapsFile);
-while not eof(ToolBitmapsFile) do
-begin
-  setlength(BitmapFiles,length(BitmapFiles)+1);
-  readln(ToolBitmapsFile,BitmapFiles[high(BitmapFiles)]);
-end;
-CloseFile(ToolBitmapsFile);
-RegisterTool (TPolylineTool.Create);
-RegisterTool (TRectangleTool.Create);
-RegisterTool (TEllipseTool.Create);
-RegisterTool (TLineTool.Create);
+RegisterTool (TPolylineTool.Create, TPolyline, 'Pencil.bmp');
+RegisterTool (TRectangleTool.Create, TRectangle, 'Rectangle.bmp');
+RegisterTool (TEllipseTool.Create, TEllipse, 'Ellipse.bmp');
+RegisterTool (TLineTool.Create, TLine, 'Line.bmp');
 end.
 
