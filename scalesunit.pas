@@ -5,13 +5,14 @@ unit scalesunit;
 interface
 
 uses
-  Classes, SysUtils, GraphMath, ExtCtrls;
+  Classes, SysUtils, GraphMath, ExtCtrls, Controls, Math;
 
 function WorldToScreen         (APoint: TFloatPoint): TPoint;
 function ScreenToWorld         (APoint: TPoint):      TFloatPoint;
 procedure SetCenterDisplace    (APoint: TPoint);
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
 procedure DoZoom               (AZoom: Double);
+procedure ShowAll;
 
 var
   Zoom: double;
@@ -50,12 +51,17 @@ begin
      MinFloatPoint.y := APoint.y;
 end;
 
+procedure ShowAll;
+begin
+  Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
+    (MaxFloatPoint.y - MinFloatPoint.y))*100;
+end;
+
 procedure DoZoom(AZoom: Double);
 begin
   Zoom := AZoom / 100;
   //SetCenterDisplace(FloatPoint(CenterDisplace.x - (MaxFloatPoint.x + MinFloatPoint.x) / 2,
   // CenterDisplace.y - (MaxFloatPoint.y + MinFloatPoint.y) / 2));
-  //Invalidate;
 end;
 
 initialization

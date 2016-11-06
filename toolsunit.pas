@@ -41,6 +41,11 @@ type
   TLineTool = class(TTwoPointsTools)
     Figure: TLine;
   end;
+
+  TMagnifierTool = class(TTool)
+    Figure: TRectangle;
+  end;
+
 var
   ToolsRegister: array of TTool;
 implementation
@@ -93,5 +98,6 @@ RegisterTool (TPolylineTool.Create, TPolyline, 'Pencil.bmp');
 RegisterTool (TRectangleTool.Create, TRectangle, 'Rectangle.bmp');
 RegisterTool (TEllipseTool.Create, TEllipse, 'Ellipse.bmp');
 RegisterTool (TLineTool.Create, TLine, 'Line.bmp');
+RegisterTool (TMagnifierTool.Create, TRectangle, 'Magnifier.bmp');
 end.
 

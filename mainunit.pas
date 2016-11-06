@@ -27,10 +27,13 @@ type
     MainPaintBox: TPaintBox;
     PaintPanel: TPanel;
     ColorsPanel: TPanel;
+    ShowAllButton: TButton;
     ZoomSpinEdit: TSpinEdit;
     ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure MainPaintBoxResize(Sender: TObject);
+    procedure ShowAllButtonClick(Sender: TObject);
     procedure ToolButtonClick(Sender: TObject);
     procedure ColorsGridDblClick(Sender: TObject);
     procedure ColorsGridDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -121,10 +124,25 @@ begin
   AboutForm.ShowModal;
 end;
 
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+  if (key=VK_ADD) or (key=VK_OEM_PLUS) then ZoomSpinEdit.Value := ZoomSpinEdit.Value + 10;
+  if (key=VK_SUBTRACT) or (key=VK_OEM_MINUS) then ZoomSpinEdit.Value := ZoomSpinEdit.Value - 10;
+end;
+
 procedure TMainForm.MainPaintBoxResize(Sender: TObject);
 begin
   scalesunit.PaintBoxSize.y:= MainPaintBox.Height;
   scalesunit.PaintBoxSize.x := MainPaintBox.Width;
+end;
+
+procedure TMainForm.ShowAllButtonClick(Sender: TObject);
+begin
+  scalesunit.ShowAll;
+  ZoomSpinEdit.Value := round(Zoom);
+    ShowMessage(FloatToStr(zoom));
+  Invalidate;
 end;
 
 procedure TMainForm.ToolButtonClick(Sender: TObject);
@@ -190,10 +208,9 @@ end;
 
 procedure TMainForm.ZoomSpinEditChange(Sender: TObject);
 begin
-  //scalesunit.Zoom:=ZoomSpinEdit.Value/100;
   scalesunit.DoZoom(ZoomSpinEdit.Value);
   //scalesunit.SetCenterDisplace(MainPaintBox);
-  //SetCenterDisplace(
+  //SetCenterDisplace()
   Invalidate;
 end;
 
