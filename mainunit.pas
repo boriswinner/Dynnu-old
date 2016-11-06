@@ -49,12 +49,14 @@ type
     procedure MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure MainPaintBoxPaint(Sender: TObject);
+    procedure ScrollBarChange(Sender: TObject);
     procedure ZoomSpinEditChange(Sender: TObject);
   private
     { private declarations }
     CurrentTool: TTool;
     Colors: array of TColor;
     ColorsFile: text;
+    BotScrollCent,RightScrollCent: integer;
   public
     { public declarations }
   end;
@@ -114,8 +116,8 @@ begin
     b.Glyph := ToolsRegister[i].Bitmap;
     b.OnClick := @ToolButtonClick;
   end;
-  scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;
+  {scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;}
   scalesunit.PaintBoxSize.y := MainPaintBox.Height;
   scalesunit.PaintBoxSize.x := MainPaintBox.Width;
 
@@ -149,7 +151,7 @@ end;
 procedure TMainForm.ShowAllButtonClick(Sender: TObject);
 begin
   scalesunit.ShowAll;
-  ZoomSpinEdit.Value := round(Zoom);
+  ZoomSpinEdit.Value := round(Zoom*100);
   ShowMessage(FloatToStr(zoom));
   Invalidate;
 end;
@@ -213,6 +215,17 @@ begin
   begin
     Figures[i].Draw(MainPaintBox.Canvas);
   end;
+end;
+
+procedure TMainForm.ScrollBarChange(Sender: TObject);
+begin
+  scalesunit.ToShift(FloatPoint(BotScrollCent-HorizontalScrollBar.Position,
+  RightScrollCent-VerticalScrollBar.Position));
+
+  BotScrollCent:=HorizontalScrollBar.Position;
+  RightScrollCent:=VerticalScrollBar.Position;
+
+  Invalidate;
 end;
 
 procedure TMainForm.ZoomSpinEditChange(Sender: TObject);

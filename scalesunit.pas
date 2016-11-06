@@ -52,14 +52,29 @@ begin
 end;
 
 procedure ShowAll;
+
+  {Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
+    +(MaxFloatPoint.y - MinFloatPoint.y));}
+var
+  RectZoomFirstPoint:TFloatPoint;
+  RectZoomLastPoint:TFloatPoint;
 begin
-  Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
-    (MaxFloatPoint.y - MinFloatPoint.y))*100;
+
+    RectZoomFirstPoint := MaxFloatPoint;
+    RectZoomLastPoint  := MinFloatPoint;
+
+    Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
+    +(MaxFloatPoint.y - MinFloatPoint.y));
+
+    ToShift(FloatPoint(CenterDisplace.x - (RectZoomFirstPoint.x + RectZoomLastPoint.x) / 2,
+            CenterDisplace.y - (RectZoomFirstPoint.y + RectZoomLastPoint.y) / 2));
 end;
 
 procedure DoZoom(AZoom: Double);
 begin
   Zoom := AZoom / 100;
+  ToShift(FloatPoint(CenterDisplace.X - (PaintBoxSize.x / 2),
+          CenterDisplace.Y - (PaintBoxSize.y/ 2)));
   //SetCenterDisplace(FloatPoint(CenterDisplace.x - (MaxFloatPoint.x + MinFloatPoint.x) / 2,
   // CenterDisplace.y - (MaxFloatPoint.y + MinFloatPoint.y) / 2));
 end;
