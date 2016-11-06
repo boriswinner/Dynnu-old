@@ -9,7 +9,7 @@ uses
 
 function WorldToScreen         (APoint: TFloatPoint): TPoint;
 function ScreenToWorld         (APoint: TPoint):      TFloatPoint;
-procedure SetCenterDisplace    (APoint: TPoint);
+procedure ToShift              (APoint: TPoint);
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
 procedure DoZoom               (AZoom: Double);
 procedure ShowAll;
@@ -33,7 +33,7 @@ begin
   ScreenToWorld.Y := (APoint.Y - PaintBoxSize.y/2)/Zoom + CenterDisplace.Y;
 end;
 
-procedure SetCenterDisplace (APoint: TPoint);
+procedure ToShift (APoint: TPoint);
 begin
   CenterDisplace.X := CenterDisplace.X - APoint.x;
   CenterDisplace.Y := CenterDisplace.Y - APoint.y;
@@ -65,7 +65,7 @@ begin
 end;
 
 initialization
-  MaxFloatPoint := Point(0,0);
-  MinFloatPoint := Point(0,0);
+  MinFloatPoint := FloatPoint(0,0);
+  MaxFloatPoint := (PaintBoxSize);
 end.
 

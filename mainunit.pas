@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, Grids, ColorPalette, LCLIntf, LCLType, Buttons, GraphMath,
+  ExtCtrls, StdCtrls, Grids, LCLIntf, LCLType, Buttons, GraphMath,
   Spin, aboutunit, figuresunit, toolsunit, scalesunit;
 
 type
@@ -27,7 +27,9 @@ type
     MainPaintBox: TPaintBox;
     PaintPanel: TPanel;
     ColorsPanel: TPanel;
+    HorizontalScrollBar: TScrollBar;
     ShowAllButton: TButton;
+    VerticalScrollBar: TScrollBar;
     ZoomSpinEdit: TSpinEdit;
     ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
@@ -112,10 +114,15 @@ begin
     b.Glyph := ToolsRegister[i].Bitmap;
     b.OnClick := @ToolButtonClick;
   end;
-  {scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;}
+  scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;
   scalesunit.PaintBoxSize.y := MainPaintBox.Height;
   scalesunit.PaintBoxSize.x := MainPaintBox.Width;
+
+  HorizontalScrollBar.max:=MainPaintBox.Width;
+  VerticalScrollBar.max:=MainPaintBox.Height;
+  HorizontalScrollBar.Position:=round(MainPaintBox.Width/2);
+  VerticalScrollBar.Position:=round(MainPaintBox.Height/2);
   zoom := 1;
 end;
 
@@ -135,13 +142,15 @@ procedure TMainForm.MainPaintBoxResize(Sender: TObject);
 begin
   scalesunit.PaintBoxSize.y:= MainPaintBox.Height;
   scalesunit.PaintBoxSize.x := MainPaintBox.Width;
+  scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;
 end;
 
 procedure TMainForm.ShowAllButtonClick(Sender: TObject);
 begin
   scalesunit.ShowAll;
   ZoomSpinEdit.Value := round(Zoom);
-    ShowMessage(FloatToStr(zoom));
+  ShowMessage(FloatToStr(zoom));
   Invalidate;
 end;
 
