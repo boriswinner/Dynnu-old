@@ -5,7 +5,8 @@ unit figuresunit;
 interface
 
 uses
-  Classes, SysUtils, Graphics;
+  Classes, SysUtils, Graphics, GraphMath,
+  scalesunit;
 type
   TFigureClass = class  of TFigure;
 
@@ -13,7 +14,7 @@ type
   public
     procedure Draw(Canvas: TCanvas); virtual; abstract;
   public
-    Points: array of TPoint;
+    Points: array of TFloatPoint;
     FigurePenColor,FigureBrushColor: TColor;
   end;
 
@@ -43,29 +44,45 @@ var
 implementation
 
 procedure TPolyline.Draw(Canvas: TCanvas);
+var i: integer;
 begin
   Canvas.Pen.Color := FigurePenColor;
-  Canvas.Polyline(Points,0,high(Points)-1);
+  for i := low(Points) to high(Points)-1 do
+  begin
+    Canvas.Line(scalesunit.WorldToScreen(Points[i]).x,
+                scalesunit.WorldToScreen(Points[i]).y,
+                scalesunit.WorldToScreen(Points[i+1]).x,
+                scalesunit.WorldToScreen(Points[i+1]).y);
+  end;
 end;
 
 procedure TRectangle.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Brush.Color := FigureBrushColor;
-  Canvas.Rectangle(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
+  Canvas.Rectangle(scalesunit.WorldToScreen(Points[low(Points)]).x,
+                   scalesunit.WorldToScreen(Points[low(Points)]).y,
+                   scalesunit.WorldToScreen(Points[high(Points)]).x,
+                   scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
 
 procedure TEllipse.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Brush.Color := FigureBrushColor;
-  Canvas.Ellipse(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
+  Canvas.Ellipse(scalesunit.WorldToScreen(Points[low(Points)]).x,
+                   scalesunit.WorldToScreen(Points[low(Points)]).y,
+                   scalesunit.WorldToScreen(Points[high(Points)]).x,
+                   scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
 
 procedure TLine.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
-  Canvas.Line(Points[low(Points)].x,Points[low(Points)].y,Points[high(Points)].x,Points[high(Points)].y);
+  Canvas.Line(scalesunit.WorldToScreen(Points[low(Points)]).x,
+                   scalesunit.WorldToScreen(Points[low(Points)]).y,
+                   scalesunit.WorldToScreen(Points[high(Points)]).x,
+                   scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
 
 initialization

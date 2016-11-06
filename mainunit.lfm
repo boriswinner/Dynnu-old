@@ -30,6 +30,7 @@ object MainForm: TMainForm
       OnMouseDown = MainPaintBoxMouseDown
       OnMouseMove = MainPaintBoxMouseMove
       OnPaint = MainPaintBoxPaint
+      OnResize = MainPaintBoxResize
     end
   end
   object ColorsPanel: TPanel
@@ -84,7 +85,22 @@ object MainForm: TMainForm
     Top = 0
     Width = 170
     Align = alLeft
+    ClientHeight = 460
+    ClientWidth = 170
     TabOrder = 2
+    object ZoomSpinEdit: TSpinEdit
+      Left = 1
+      Height = 23
+      Top = 436
+      Width = 168
+      Align = alBottom
+      Alignment = taCenter
+      MaxValue = 500
+      MinValue = 1
+      OnChange = ZoomSpinEditChange
+      TabOrder = 0
+      Value = 100
+    end
   end
   object MainMenu: TMainMenu
     left = 24

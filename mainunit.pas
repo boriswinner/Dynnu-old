@@ -6,8 +6,8 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, Grids, ColorPalette,LCLIntf,LCLType, Buttons,
-  aboutunit,figuresunit,toolsunit;
+  ExtCtrls, StdCtrls, Grids, ColorPalette, LCLIntf, LCLType, Buttons, GraphMath,
+  Spin, aboutunit, figuresunit, toolsunit, scalesunit;
 
 type
   TFigureClass = figuresunit.TFigureClass;
@@ -27,8 +27,10 @@ type
     MainPaintBox: TPaintBox;
     PaintPanel: TPanel;
     ColorsPanel: TPanel;
+    ZoomSpinEdit: TSpinEdit;
     ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure MainPaintBoxResize(Sender: TObject);
     procedure ToolButtonClick(Sender: TObject);
     procedure ColorsGridDblClick(Sender: TObject);
     procedure ColorsGridDrawCell(Sender: TObject; aCol, aRow: Integer;
@@ -42,6 +44,7 @@ type
     procedure MainPaintBoxMouseMove(Sender: TObject; Shift: TShiftState; X,
       Y: Integer);
     procedure MainPaintBoxPaint(Sender: TObject);
+    procedure ZoomSpinEditChange(Sender: TObject);
   private
     { private declarations }
     CurrentTool: TTool;
@@ -106,11 +109,22 @@ begin
     b.Glyph := ToolsRegister[i].Bitmap;
     b.OnClick := @ToolButtonClick;
   end;
+  {scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;}
+  scalesunit.PaintBoxSize.y := MainPaintBox.Height;
+  scalesunit.PaintBoxSize.x := MainPaintBox.Width;
+  zoom := 1;
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
 begin
   AboutForm.ShowModal;
+end;
+
+procedure TMainForm.MainPaintBoxResize(Sender: TObject);
+begin
+  scalesunit.PaintBoxSize.y:= MainPaintBox.Height;
+  scalesunit.PaintBoxSize.x := MainPaintBox.Width;
 end;
 
 procedure TMainForm.ToolButtonClick(Sender: TObject);
@@ -172,6 +186,15 @@ begin
   begin
     Figures[i].Draw(MainPaintBox.Canvas);
   end;
+end;
+
+procedure TMainForm.ZoomSpinEditChange(Sender: TObject);
+begin
+  //scalesunit.Zoom:=ZoomSpinEdit.Value/100;
+  scalesunit.DoZoom(ZoomSpinEdit.Value);
+  //scalesunit.SetCenterDisplace(MainPaintBox);
+  //SetCenterDisplace(
+  Invalidate;
 end;
 
 end.

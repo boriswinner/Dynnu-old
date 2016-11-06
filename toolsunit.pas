@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, Graphics,
-  figuresunit;
+  figuresunit,scalesunit;
 
 type
 
@@ -54,7 +54,8 @@ begin
     FigurePenColor := APenColor;
     FigureBrushColor := ABrushColor;
     SetLength(Points,1);
-    Points[high(Points)] := APoint;
+    Points[high(Points)] := scalesunit.ScreenToWorld(APoint);
+    SetMaxMinFloatPoints(ScreenToWorld(APoint));
   end;
 end;
 
@@ -62,16 +63,18 @@ procedure TTool.AddPoint(APoint: TPoint);
 begin
   with Figures[high(Figures)] do begin
     SetLength(Points,length(Points)+1);
-    Points[high(Points)] := APoint;
+    Points[high(Points)] := scalesunit.ScreenToWorld(APoint);
   end;
+  SetMaxMinFloatPoints(ScreenToWorld(APoint));
 end;
 
 procedure TTwoPointsTools.AddPoint(APoint: TPoint);
 begin
   with Figures[high(Figures)] do begin
     SetLength(Points,2);
-    Points[high(Points)] := APoint;
+    Points[high(Points)] := scalesunit.ScreenToWorld(APoint);
   end;
+  SetMaxMinFloatPoints(ScreenToWorld(APoint));
 end;
 
 procedure RegisterTool(ATool: TTool; AFigureClass: TFigureClass; ABitmapFile: string);
