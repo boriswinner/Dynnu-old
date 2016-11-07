@@ -26,6 +26,13 @@ type
     procedure AddPoint(APoint: TPoint); override;
   end;
 
+  THandTool = class(TTool)
+  public
+    Figure: THandFigure;
+  public
+    procedure AddPoint(APoint: TPoint); override;
+  end;
+
   TPolylineTool = class(TTool)
     Figure: TPolyline;
   end;
@@ -82,6 +89,14 @@ begin
   SetMaxMinFloatPoints(ScreenToWorld(APoint));
 end;
 
+procedure THandTool.AddPoint(APoint: TPoint);
+begin
+  with Figures[high(Figures)] do begin
+    Points[low(Points)] := scalesunit.ScreenToWorld(APoint);
+  end;
+  SetMaxMinFloatPoints(ScreenToWorld(APoint));
+end;
+
 procedure RegisterTool(ATool: TTool; AFigureClass: TFigureClass; ABitmapFile: string);
 begin
   setlength(ToolsRegister,length(ToolsRegister)+1);
@@ -99,5 +114,6 @@ RegisterTool (TRectangleTool.Create, TRectangle, 'Rectangle.bmp');
 RegisterTool (TEllipseTool.Create, TEllipse, 'Ellipse.bmp');
 RegisterTool (TLineTool.Create, TLine, 'Line.bmp');
 RegisterTool (TMagnifierTool.Create, TRectangle, 'Magnifier.bmp');
+RegisterTool (THandTool.Create, THandFigure, 'Hand.bmp');
 end.
 

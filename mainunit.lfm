@@ -10,6 +10,7 @@ object MainForm: TMainForm
   Constraints.MinWidth = 320
   KeyPreview = True
   Menu = MainMenu
+  OnActivate = FormActivate
   OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   Position = poScreenCenter
@@ -33,6 +34,7 @@ object MainForm: TMainForm
       ParentColor = False
       OnMouseDown = MainPaintBoxMouseDown
       OnMouseMove = MainPaintBoxMouseMove
+      OnMouseUp = MainPaintBoxMouseUp
       OnPaint = MainPaintBoxPaint
       OnResize = MainPaintBoxResize
     end
@@ -43,7 +45,7 @@ object MainForm: TMainForm
       Width = 17
       Align = alRight
       Kind = sbVertical
-      PageSize = 0
+      PageSize = 1
       TabOrder = 0
       OnChange = ScrollBarChange
     end
@@ -91,6 +93,7 @@ object MainForm: TMainForm
       Top = 1
       Width = 88
       Align = alRight
+      Color = clMenu
       ColCount = 3
       DefaultColWidth = 16
       DefaultRowHeight = 16

@@ -5,7 +5,7 @@ unit figuresunit;
 interface
 
 uses
-  Classes, SysUtils, Graphics, GraphMath,
+  Classes, SysUtils, Graphics, GraphMath, Forms, Dialogs,
   scalesunit;
 type
   TFigureClass = class  of TFigure;
@@ -37,10 +37,17 @@ type
   public
     procedure Draw(Canvas:TCanvas); override;
   end;
+
+  THandFigure = class(TFigure)
+  public
+    procedure Draw(Canvas: TCanvas); override;
+  end;
+
 var
   Figures: array of TFigure;
   PenColor,BrushColor: TColor;
   FiguresRegister: array of TFigureClass;
+  HandPrevCent: TPoint;
 implementation
 
 procedure TPolyline.Draw(Canvas: TCanvas);
@@ -80,9 +87,21 @@ procedure TLine.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Line(scalesunit.WorldToScreen(Points[low(Points)]).x,
-                   scalesunit.WorldToScreen(Points[low(Points)]).y,
-                   scalesunit.WorldToScreen(Points[high(Points)]).x,
-                   scalesunit.WorldToScreen(Points[high(Points)]).y);
+              scalesunit.WorldToScreen(Points[low(Points)]).y,
+              scalesunit.WorldToScreen(Points[high(Points)]).x,
+              scalesunit.WorldToScreen(Points[high(Points)]).y);
+end;
+
+procedure THandFigure.Draw(Canvas: TCanvas);
+begin
+  Canvas.Brush.Color := clWhite;
+  Canvas.Pen.Color := clBlack;
+  Canvas.Ellipse(scalesunit.WorldToScreen(Points[low(Points)]).x-5,
+                 scalesunit.WorldToScreen(Points[low(Points)]).y-5,
+                 scalesunit.WorldToScreen(Points[low(Points)]).x+5,
+                 scalesunit.WorldToScreen(Points[low(Points)]).y+5);
+  ToShift(Points[low(Points)]);
+  HandPrevCent := Points[low(Points)];
 end;
 
 initialization

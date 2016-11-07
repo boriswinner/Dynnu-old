@@ -33,7 +33,10 @@ type
     ZoomSpinEdit: TSpinEdit;
     ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure FormActivate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure MainPaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
+      Shift: TShiftState; X, Y: Integer);
     procedure MainPaintBoxResize(Sender: TObject);
     procedure ShowAllButtonClick(Sender: TObject);
     procedure ToolButtonClick(Sender: TObject);
@@ -87,11 +90,18 @@ var
   i: integer;
   b: TBitBtn;
 begin
-  CurrentTool := ToolsRegister[0];
+  Zoom                        := 1;
+  scalesunit.CenterDisplace.X := MainPaintBox.Width/2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height/2;
+  scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
+  scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
+
+  CurrentTool       := ToolsRegister[0];
   ColorLabel1.Color := PenColor;
   ColorLabel2.Color := BrushColor;
-  ColorsGrid.Width := ColorsGrid.DefaultColWidth*ColorsGrid.ColCount+4;
+  ColorsGrid.Width  := ColorsGrid.DefaultColWidth*ColorsGrid.ColCount+4;
   ColorsPanel.Width := ColorsGrid.Width;
+
   AssignFile(ColorsFile,'colors.txt');
   reset(ColorsFile);
   while not eof(ColorsFile) do
@@ -100,32 +110,30 @@ begin
     readln(ColorsFile,Colors[high(Colors)]);
   end;
   CloseFile(ColorsFile);
+
   ColorsGrid.RowCount := length(Colors) div 3;
-  ToolsPanel.Width := 5 + 4*32 + 5;
+  ToolsPanel.Width    := 5 + 4*32 + 5;
   for i := low(ToolsRegister) to high(ToolsRegister) do
   begin
-    b := TBitBtn.Create(MainForm);
-    b.Parent := ToolsPanel;
-    b.name := 'ToolButton'+IntToStr(i+1);
+    b         := TBitBtn.Create(MainForm);
+    b.Parent  := ToolsPanel;
+    b.name    := 'ToolButton'+IntToStr(i+1);
     b.Caption := '';
-    b.Tag := Integer(i);
-    b.Left := 5 + (i mod 4)*32;
-    b.Top  := 5 + (i div 4)*32;
-    b.Width := 32;
-    b.Height:= 32;
-    b.Glyph := ToolsRegister[i].Bitmap;
+    b.Tag     := Integer(i);
+    b.Left    := 5 + (i mod 4)*32;
+    b.Top     := 5 + (i div 4)*32;
+    b.Width   := 32;
+    b.Height  := 32;
+    b.Glyph   := ToolsRegister[i].Bitmap;
     b.OnClick := @ToolButtonClick;
   end;
-  scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;
-  scalesunit.PaintBoxSize.y := MainPaintBox.Height;
-  scalesunit.PaintBoxSize.x := MainPaintBox.Width;
 
-  HorizontalScrollBar.max:=MainPaintBox.Width;
-  VerticalScrollBar.max:=MainPaintBox.Height;
-  HorizontalScrollBar.Position:=round(MainPaintBox.Width/2);
-  VerticalScrollBar.Position:=round(MainPaintBox.Height/2);
-  zoom := 1;
+  HorizontalScrollBar.max:=round(MainPaintBox.Width*scalesunit.Zoom);
+  HorizontalScrollBar.PageSize := MainPaintBox.ClientWidth;
+  HorizontalScrollBar.Position:=round(HorizontalScrollBar.max/2);
+  VerticalScrollBar.max:=round(MainPaintBox.Height*scalesunit.Zoom);
+  VerticalScrollBar.PageSize := MainPaintBox.ClientHeight;
+  VerticalScrollBar.Position:=round(VerticalScrollBar.max/2);
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -133,19 +141,41 @@ begin
   AboutForm.ShowModal;
 end;
 
+procedure TMainForm.FormActivate(Sender: TObject);
+begin
+  CurrentTool := TRectangleTool.Create;
+  CurrentTool.FigureCreate(TRectangle,Point(0,0),clBlack,clWhite);
+  CurrentTool.AddPoint(Point(MainPaintBox.Width,MainPaintBox.Height));
+  CurrentTool := ToolsRegister[0];
+  Invalidate;
+  {ShowMessage(IntToStr(WorldToScreen(MaxFloatPoint).x));
+  ShowMessage(IntToStr(WorldToScreen(MaxFloatPoint).y));
+  ShowMessage(IntToStr(WorldToScreen(MinFloatPoint).x));
+  ShowMessage(IntToStr(WorldToScreen(MinFloatPoint).y));}
+end;
+
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
-  if (key=VK_ADD) or (key=VK_OEM_PLUS) then ZoomSpinEdit.Value := ZoomSpinEdit.Value + 10;
-  if (key=VK_SUBTRACT) or (key=VK_OEM_MINUS) then ZoomSpinEdit.Value := ZoomSpinEdit.Value - 10;
+  if (key=VK_ADD) or (key=VK_OEM_PLUS) then
+    ZoomSpinEdit.Value := ZoomSpinEdit.Value + 10;
+  if (key=VK_SUBTRACT) or (key=VK_OEM_MINUS) then
+    ZoomSpinEdit.Value := ZoomSpinEdit.Value - 10;
+end;
+
+procedure TMainForm.MainPaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
+  Shift: TShiftState; X, Y: Integer);
+begin
+  if (CurrentTool.ClassName = 'THandTool') then setlength(Figures,length(Figures)-1);
+  Invalidate;
 end;
 
 procedure TMainForm.MainPaintBoxResize(Sender: TObject);
 begin
-  scalesunit.PaintBoxSize.y:= MainPaintBox.Height;
-  scalesunit.PaintBoxSize.x := MainPaintBox.Width;
-  scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;
+  scalesunit.ToShift(FloatPoint((MainPaintBox.Width -PaintBoxSize.x)/2,
+                                (MainPaintBox.Height-PaintBoxSize.y)/2));
+  scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
+  scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
 end;
 
 procedure TMainForm.ShowAllButtonClick(Sender: TObject);
@@ -219,9 +249,11 @@ end;
 
 procedure TMainForm.ScrollBarChange(Sender: TObject);
 begin
+  //сдвигаем картинку
   scalesunit.ToShift(FloatPoint(BotScrollCent-HorizontalScrollBar.Position,
   RightScrollCent-VerticalScrollBar.Position));
 
+  //запоминаем прошлое положение
   BotScrollCent:=HorizontalScrollBar.Position;
   RightScrollCent:=VerticalScrollBar.Position;
 
@@ -234,6 +266,11 @@ begin
   //scalesunit.SetCenterDisplace(MainPaintBox);
   //SetCenterDisplace()
   Invalidate;
+end;
+
+procedure SetScrollBarPositions;
+begin
+
 end;
 
 end.

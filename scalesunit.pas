@@ -9,7 +9,7 @@ uses
 
 function WorldToScreen         (APoint: TFloatPoint): TPoint;
 function ScreenToWorld         (APoint: TPoint):      TFloatPoint;
-procedure ToShift              (APoint: TPoint);
+procedure ToShift              (APoint: TFloatPoint);
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
 procedure DoZoom               (AZoom: Double);
 procedure ShowAll;
@@ -33,10 +33,10 @@ begin
   ScreenToWorld.Y := (APoint.Y - CenterDisplace.Y)/Zoom;
 end;
 
-procedure ToShift (APoint: TPoint);
+//обновление смещения
+procedure ToShift (APoint: TFloatPoint);
 begin
-  CenterDisplace.X := CenterDisplace.X + APoint.x;
-  CenterDisplace.Y := CenterDisplace.Y + APoint.y;
+  CenterDisplace := CenterDisplace + APoint;
 end;
 
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
@@ -52,22 +52,12 @@ begin
 end;
 
 procedure ShowAll;
-
-  {Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
-    +(MaxFloatPoint.y - MinFloatPoint.y));}
-var
-  RectZoomFirstPoint:TFloatPoint;
-  RectZoomLastPoint:TFloatPoint;
 begin
-
-    RectZoomFirstPoint := MaxFloatPoint;
-    RectZoomLastPoint  := MinFloatPoint;
-
-    Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
+  Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
     +(MaxFloatPoint.y - MinFloatPoint.y));
 
-    ToShift(FloatPoint(CenterDisplace.x - (RectZoomFirstPoint.x + RectZoomLastPoint.x) / 2,
-            CenterDisplace.y - (RectZoomFirstPoint.y + RectZoomLastPoint.y) / 2));
+  ToShift(FloatPoint(CenterDisplace.x/2 - (MaxFloatPoint.x + MinFloatPoint.x)/2,
+            CenterDisplace.y/2 - (MaxFloatPoint.y + MinFloatPoint.y))/2);
 end;
 
 procedure DoZoom(AZoom: Double);
