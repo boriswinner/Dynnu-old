@@ -22,7 +22,7 @@
         <IsVisibleTab Value="True"/>
         <WindowIndex Value="1"/>
         <TopLine Value="98"/>
-        <CursorPos X="61" Y="120"/>
+        <CursorPos X="3" Y="119"/>
         <UsageCount Value="201"/>
         <Loaded Value="True"/>
         <LoadedDesigner Value="True"/>
@@ -33,7 +33,7 @@
         <ComponentName Value="AboutForm"/>
         <HasResources Value="True"/>
         <ResourceBaseClass Value="Form"/>
-        <UsageCount Value="151"/>
+        <UsageCount Value="177"/>
       </Unit2>
       <Unit3>
         <Filename Value="figuresunit.pas"/>
@@ -42,7 +42,7 @@
         <WindowIndex Value="1"/>
         <TopLine Value="40"/>
         <CursorPos X="3" Y="11"/>
-        <UsageCount Value="151"/>
+        <UsageCount Value="177"/>
         <Loaded Value="True"/>
       </Unit3>
       <Unit4>
@@ -51,7 +51,7 @@
         <EditorIndex Value="1"/>
         <WindowIndex Value="1"/>
         <CursorPos X="7" Y="18"/>
-        <UsageCount Value="151"/>
+        <UsageCount Value="177"/>
         <Loaded Value="True"/>
       </Unit4>
       <Unit5>
@@ -59,9 +59,9 @@
         <IsPartOfProject Value="True"/>
         <EditorIndex Value="3"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="13"/>
-        <CursorPos X="59" Y="27"/>
-        <UsageCount Value="47"/>
+        <TopLine Value="31"/>
+        <CursorPos X="31" Y="35"/>
+        <UsageCount Value="73"/>
         <Loaded Value="True"/>
       </Unit5>
     </Units>

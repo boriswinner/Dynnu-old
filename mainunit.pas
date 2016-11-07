@@ -116,8 +116,8 @@ begin
     b.Glyph := ToolsRegister[i].Bitmap;
     b.OnClick := @ToolButtonClick;
   end;
-  {scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;}
+  scalesunit.CenterDisplace.X := MainPaintBox.Width div 2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height div 2;
   scalesunit.PaintBoxSize.y := MainPaintBox.Height;
   scalesunit.PaintBoxSize.x := MainPaintBox.Width;
 
