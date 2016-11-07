@@ -49,7 +49,7 @@ type
     Figure: TLine;
   end;
 
-  TMagnifierTool = class(TTool)
+  TMagnifierTool = class(TTwoPointsTools)
     Figure: TRectangle;
   end;
 
@@ -92,9 +92,12 @@ end;
 procedure THandTool.AddPoint(APoint: TPoint);
 begin
   with Figures[high(Figures)] do begin
-    Points[low(Points)] := scalesunit.ScreenToWorld(APoint);
+    SetLength(Points,2);
+    Points[high(Points)].x := scalesunit.ScreenToWorld(APoint).x - Points[low(Points)].x;
+    Points[high(Points)].y := scalesunit.ScreenToWorld(APoint).y - Points[low(Points)].y;
+    ToShift(Points[high(Points)])
   end;
-  SetMaxMinFloatPoints(ScreenToWorld(APoint));
+  //SetMaxMinFloatPoints(ScreenToWorld(APoint));
 end;
 
 procedure RegisterTool(ATool: TTool; AFigureClass: TFigureClass; ABitmapFile: string);
@@ -113,7 +116,7 @@ RegisterTool (TPolylineTool.Create, TPolyline, 'Pencil.bmp');
 RegisterTool (TRectangleTool.Create, TRectangle, 'Rectangle.bmp');
 RegisterTool (TEllipseTool.Create, TEllipse, 'Ellipse.bmp');
 RegisterTool (TLineTool.Create, TLine, 'Line.bmp');
-RegisterTool (TMagnifierTool.Create, TRectangle, 'Magnifier.bmp');
+RegisterTool (TMagnifierTool.Create, TMagnifierFrame, 'Magnifier.bmp');
 RegisterTool (THandTool.Create, THandFigure, 'Hand.bmp');
 end.
 

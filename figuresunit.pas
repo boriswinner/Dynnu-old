@@ -43,6 +43,11 @@ type
     procedure Draw(Canvas: TCanvas); override;
   end;
 
+  TMagnifierFrame = class(TFigure)
+  public
+    procedure Draw(Canvas: TCanvas); override;
+  end;
+
 var
   Figures: array of TFigure;
   PenColor,BrushColor: TColor;
@@ -56,8 +61,8 @@ begin
   Canvas.Pen.Color := FigurePenColor;
   for i := low(Points) to high(Points)-1 do
   begin
-    Canvas.Line(scalesunit.WorldToScreen(Points[i]).x,
-                scalesunit.WorldToScreen(Points[i]).y,
+    Canvas.Line(scalesunit.WorldToScreen(Points[i])  .x,
+                scalesunit.WorldToScreen(Points[i])  .y,
                 scalesunit.WorldToScreen(Points[i+1]).x,
                 scalesunit.WorldToScreen(Points[i+1]).y);
   end;
@@ -67,8 +72,8 @@ procedure TRectangle.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Brush.Color := FigureBrushColor;
-  Canvas.Rectangle(scalesunit.WorldToScreen(Points[low(Points)]).x,
-                   scalesunit.WorldToScreen(Points[low(Points)]).y,
+  Canvas.Rectangle(scalesunit.WorldToScreen(Points[low(Points)]) .x,
+                   scalesunit.WorldToScreen(Points[low(Points)]) .y,
                    scalesunit.WorldToScreen(Points[high(Points)]).x,
                    scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
@@ -77,17 +82,17 @@ procedure TEllipse.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Brush.Color := FigureBrushColor;
-  Canvas.Ellipse(scalesunit.WorldToScreen(Points[low(Points)]).x,
-                   scalesunit.WorldToScreen(Points[low(Points)]).y,
-                   scalesunit.WorldToScreen(Points[high(Points)]).x,
-                   scalesunit.WorldToScreen(Points[high(Points)]).y);
+  Canvas.Ellipse(scalesunit.WorldToScreen(Points[low(Points)]) .x,
+                 scalesunit.WorldToScreen(Points[low(Points)]) .y,
+                 scalesunit.WorldToScreen(Points[high(Points)]).x,
+                 scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
 
 procedure TLine.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
-  Canvas.Line(scalesunit.WorldToScreen(Points[low(Points)]).x,
-              scalesunit.WorldToScreen(Points[low(Points)]).y,
+  Canvas.Line(scalesunit.WorldToScreen(Points[low(Points)]) .x,
+              scalesunit.WorldToScreen(Points[low(Points)]) .y,
               scalesunit.WorldToScreen(Points[high(Points)]).x,
               scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
@@ -100,8 +105,18 @@ begin
                  scalesunit.WorldToScreen(Points[low(Points)]).y-5,
                  scalesunit.WorldToScreen(Points[low(Points)]).x+5,
                  scalesunit.WorldToScreen(Points[low(Points)]).y+5);
-  ToShift(Points[low(Points)]);
-  HandPrevCent := Points[low(Points)];
+  {ToShift(HandPrevCent-Points[low(Points)]);
+  HandPrevCent := Points[low(Points)]; }
+end;
+
+procedure TMagnifierFrame.Draw(Canvas: TCanvas);
+begin
+  Canvas.Pen.Color := clBlack;
+  Canvas.Brush.Color := clWhite;
+  Canvas.Rectangle(scalesunit.WorldToScreen(Points[low(Points)]) .x,
+                   scalesunit.WorldToScreen(Points[low(Points)]) .y,
+                   scalesunit.WorldToScreen(Points[high(Points)]).x,
+                   scalesunit.WorldToScreen(Points[high(Points)]).y);
 end;
 
 initialization

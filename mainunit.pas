@@ -91,8 +91,8 @@ var
   b: TBitBtn;
 begin
   Zoom                        := 1;
-  scalesunit.CenterDisplace.X := MainPaintBox.Width/2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height/2;
+  {scalesunit.CenterDisplace.X := MainPaintBox.Width/2;
+  scalesunit.CenterDisplace.Y := MainPaintBox.Height/2;}
   scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
   scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
 
@@ -128,12 +128,12 @@ begin
     b.OnClick := @ToolButtonClick;
   end;
 
-  HorizontalScrollBar.max:=round(MainPaintBox.Width*scalesunit.Zoom);
-  HorizontalScrollBar.PageSize := MainPaintBox.ClientWidth;
-  HorizontalScrollBar.Position:=round(HorizontalScrollBar.max/2);
-  VerticalScrollBar.max:=round(MainPaintBox.Height*scalesunit.Zoom);
-  VerticalScrollBar.PageSize := MainPaintBox.ClientHeight;
-  VerticalScrollBar.Position:=round(VerticalScrollBar.max/2);
+  HorizontalScrollBar.max:=MainPaintBox.Width;
+  //HorizontalScrollBar.Position:=round(HorizontalScrollBar.max/2);
+  //HorizontalScrollBar.PageSize := MainPaintBox.ClientWidth div 2;
+  VerticalScrollBar.max:=MainPaintBox.Height;
+  //VerticalScrollBar.PageSize := MainPaintBox.ClientHeight;
+  //VerticalScrollBar.Position:=round(VerticalScrollBar.max/2);
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -166,16 +166,26 @@ end;
 procedure TMainForm.MainPaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
-  if (CurrentTool.ClassName = 'THandTool') then setlength(Figures,length(Figures)-1);
+  if (CurrentTool.ClassName = 'THandTool') or
+  (CurrentTool.ClassName = 'TMagnifierTool') then
+    setlength(Figures,length(Figures)-1);
+
+  {if (CurrentTool.ClassName = 'TMagnifierTool') then
+  begin
+      with Figures[high(Figures)] do begin
+        ShowAll(Points[high(Points)],Points[low(Points)]);
+      end;
+      ZoomSpinEdit.Value := round(Zoom*100);
+  end; }
   Invalidate;
 end;
 
 procedure TMainForm.MainPaintBoxResize(Sender: TObject);
 begin
-  scalesunit.ToShift(FloatPoint((MainPaintBox.Width -PaintBoxSize.x)/2,
-                                (MainPaintBox.Height-PaintBoxSize.y)/2));
-  scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
+  {scalesunit.ToShift(FloatPoint((MainPaintBox.Width -PaintBoxSize.x),
+                                (MainPaintBox.Height-PaintBoxSize.y))); }
   scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
+  scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
 end;
 
 procedure TMainForm.ShowAllButtonClick(Sender: TObject);
@@ -256,6 +266,11 @@ begin
   //запоминаем прошлое положение
   BotScrollCent:=HorizontalScrollBar.Position;
   RightScrollCent:=VerticalScrollBar.Position;
+
+  VerticalScrollBar.Max := round(WorldToScreen(MaxFloatPoint).y);
+  VerticalScrollBar.Min := round(WorldToScreen(MinFloatPoint).y);
+  HorizontalScrollBar.Max := round(WorldToScreen(MaxFloatPoint).x);
+  HorizontalScrollBar.Min := round(WorldToScreen(MinFloatPoint).x);
 
   Invalidate;
 end;
