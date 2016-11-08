@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, Grids, LCLIntf, LCLType, Buttons, GraphMath,
+  ExtCtrls, StdCtrls, Grids, LCLIntf, LCLType, Buttons, GraphMath, Math,
   Spin, aboutunit, figuresunit, toolsunit, scalesunit;
 
 type
@@ -134,6 +134,8 @@ begin
   VerticalScrollBar.max:=MainPaintBox.Height;
   //VerticalScrollBar.PageSize := MainPaintBox.ClientHeight;
   //VerticalScrollBar.Position:=round(VerticalScrollBar.max/2);
+  {HorizontalScrollBar.Position:=round(MainPaintBox.Width/2);
+  VerticalScrollBar.Position:=round(MainPaintBox.Height/2); }
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -148,6 +150,10 @@ begin
   CurrentTool.AddPoint(Point(MainPaintBox.Width,MainPaintBox.Height));
   CurrentTool := ToolsRegister[0];
   Invalidate;
+  VerticalScrollBar.Max := round(WorldToScreen(MaxFloatPoint).y);
+  VerticalScrollBar.Min := round(WorldToScreen(MinFloatPoint).y);
+  HorizontalScrollBar.Max := round(WorldToScreen(MaxFloatPoint).x);
+  HorizontalScrollBar.Min := round(WorldToScreen(MinFloatPoint).x);
   {ShowMessage(IntToStr(WorldToScreen(MaxFloatPoint).x));
   ShowMessage(IntToStr(WorldToScreen(MaxFloatPoint).y));
   ShowMessage(IntToStr(WorldToScreen(MinFloatPoint).x));
@@ -166,17 +172,20 @@ end;
 procedure TMainForm.MainPaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
+  if (CurrentTool.ClassName = 'TMagnifierTool') then
+  begin
+      with Figures[high(Figures)] do begin
+        {ShowMessage(FloatToStr(Points[low(Points)].x));
+        ShowMessage(FloatToStr(Points[low(Points)].y));
+        ShowMessage(FloatToStr(Points[high(Points)].x));
+        ShowMessage(IntToStr(Points[high(Points)],y));}
+        ToShift(Points[high(Points)]);
+      end;
+      ZoomSpinEdit.Value := round(Zoom*100);
+  end;
   if (CurrentTool.ClassName = 'THandTool') or
   (CurrentTool.ClassName = 'TMagnifierTool') then
     setlength(Figures,length(Figures)-1);
-
-  {if (CurrentTool.ClassName = 'TMagnifierTool') then
-  begin
-      with Figures[high(Figures)] do begin
-        ShowAll(Points[high(Points)],Points[low(Points)]);
-      end;
-      ZoomSpinEdit.Value := round(Zoom*100);
-  end; }
   Invalidate;
 end;
 
@@ -190,7 +199,7 @@ end;
 
 procedure TMainForm.ShowAllButtonClick(Sender: TObject);
 begin
-  scalesunit.ShowAll;
+  scalesunit.ShowAll(MaxFloatPoint,MinFloatPoint);
   ZoomSpinEdit.Value := round(Zoom*100);
   ShowMessage(FloatToStr(zoom));
   Invalidate;

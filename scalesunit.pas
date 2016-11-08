@@ -12,7 +12,7 @@ function ScreenToWorld         (APoint: TPoint):      TFloatPoint;
 procedure ToShift              (APoint: TFloatPoint);
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
 procedure DoZoom               (AZoom: Double);
-procedure ShowAll;
+procedure ShowAll(AMaxFloatPoint,AMinFloatPoint: TFloatPoint);
 
 var
   Zoom: double;
@@ -51,12 +51,12 @@ begin
      MinFloatPoint.y := APoint.y;
 end;
 
-procedure ShowAll;
+procedure ShowAll(AMaxFloatPoint,AMinFloatPoint: TFloatPoint);
 begin
-  ToShift(FloatPoint(CenterDisplace.x - (MaxFloatPoint.x + MinFloatPoint.x) / 2,
-    CenterDisplace.y - (MaxFloatPoint.y + MinFloatPoint.y) / 2));
-  Zoom := min(PaintBoxSize.x / (MaxFloatPoint.x - MinFloatPoint.x), PaintBoxSize.y /
-    (MaxFloatPoint.y - MinFloatPoint.y));
+  ToShift(FloatPoint(CenterDisplace.x - (AMaxFloatPoint.x + AMinFloatPoint.x) / 2,
+    CenterDisplace.y - (AMaxFloatPoint.y + AMinFloatPoint.y) / 2));
+  Zoom := min(PaintBoxSize.x / (AMaxFloatPoint.x - AMinFloatPoint.x), PaintBoxSize.y /
+    (AMaxFloatPoint.y - AMinFloatPoint.y));
 end;
 
 procedure DoZoom(AZoom: Double);
