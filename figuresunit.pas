@@ -105,8 +105,6 @@ begin
                  scalesunit.WorldToScreen(Points[low(Points)]).y-5,
                  scalesunit.WorldToScreen(Points[low(Points)]).x+5,
                  scalesunit.WorldToScreen(Points[low(Points)]).y+5);
-  {ToShift(HandPrevCent-Points[low(Points)]);
-  HandPrevCent := Points[low(Points)]; }
 end;
 
 procedure TMagnifierFrame.Draw(Canvas: TCanvas);

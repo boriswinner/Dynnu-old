@@ -91,8 +91,6 @@ var
   b: TBitBtn;
 begin
   Zoom                        := 1;
-  {scalesunit.CenterDisplace.X := MainPaintBox.Width/2;
-  scalesunit.CenterDisplace.Y := MainPaintBox.Height/2;}
   scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
   scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
 
@@ -129,13 +127,7 @@ begin
   end;
 
   HorizontalScrollBar.max:=MainPaintBox.Width;
-  //HorizontalScrollBar.Position:=round(HorizontalScrollBar.max/2);
-  //HorizontalScrollBar.PageSize := MainPaintBox.ClientWidth div 2;
   VerticalScrollBar.max:=MainPaintBox.Height;
-  //VerticalScrollBar.PageSize := MainPaintBox.ClientHeight;
-  //VerticalScrollBar.Position:=round(VerticalScrollBar.max/2);
-  {HorizontalScrollBar.Position:=round(MainPaintBox.Width/2);
-  VerticalScrollBar.Position:=round(MainPaintBox.Height/2); }
 end;
 
 procedure TMainForm.AboutMenuItemClick(Sender: TObject);
@@ -154,10 +146,6 @@ begin
   VerticalScrollBar.Min := round(WorldToScreen(MinFloatPoint).y);
   HorizontalScrollBar.Max := round(WorldToScreen(MaxFloatPoint).x);
   HorizontalScrollBar.Min := round(WorldToScreen(MinFloatPoint).x);
-  {ShowMessage(IntToStr(WorldToScreen(MaxFloatPoint).x));
-  ShowMessage(IntToStr(WorldToScreen(MaxFloatPoint).y));
-  ShowMessage(IntToStr(WorldToScreen(MinFloatPoint).x));
-  ShowMessage(IntToStr(WorldToScreen(MinFloatPoint).y));}
 end;
 
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
@@ -175,10 +163,6 @@ begin
   if (CurrentTool.ClassName = 'TMagnifierTool') then
   begin
       with Figures[high(Figures)] do begin
-        {ShowMessage(FloatToStr(Points[low(Points)].x));
-        ShowMessage(FloatToStr(Points[low(Points)].y));
-        ShowMessage(FloatToStr(Points[high(Points)].x));
-        ShowMessage(IntToStr(Points[high(Points)],y));}
         ToShift(Points[high(Points)]);
       end;
       ZoomSpinEdit.Value := round(Zoom*100);
@@ -191,8 +175,6 @@ end;
 
 procedure TMainForm.MainPaintBoxResize(Sender: TObject);
 begin
-  {scalesunit.ToShift(FloatPoint((MainPaintBox.Width -PaintBoxSize.x),
-                                (MainPaintBox.Height-PaintBoxSize.y))); }
   scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
   scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
 end;
@@ -287,8 +269,6 @@ end;
 procedure TMainForm.ZoomSpinEditChange(Sender: TObject);
 begin
   scalesunit.DoZoom(ZoomSpinEdit.Value);
-  //scalesunit.SetCenterDisplace(MainPaintBox);
-  //SetCenterDisplace()
   Invalidate;
 end;
 

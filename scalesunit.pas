@@ -64,10 +64,6 @@ begin
   Zoom := AZoom / 100;
   ToShift(FloatPoint(CenterDisplace.x - (MaxFloatPoint.x + MinFloatPoint.x) / 2,
    CenterDisplace.y - (MaxFloatPoint.y + MinFloatPoint.y) / 2));
-  {ToShift(FloatPoint(CenterDisplace.X - (PaintBoxSize.x / 2),
-          CenterDisplace.Y - (PaintBoxSize.y/ 2)));}
-  //SetCenterDisplace(FloatPoint(CenterDisplace.x - (MaxFloatPoint.x + MinFloatPoint.x) / 2,
-  // CenterDisplace.y - (MaxFloatPoint.y + MinFloatPoint.y) / 2));
 end;
 
 initialization

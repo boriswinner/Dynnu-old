@@ -97,7 +97,6 @@ begin
     Points[high(Points)].y := scalesunit.ScreenToWorld(APoint).y - Points[low(Points)].y;
     ToShift(Points[high(Points)])
   end;
-  //SetMaxMinFloatPoints(ScreenToWorld(APoint));
 end;
 
 procedure RegisterTool(ATool: TTool; AFigureClass: TFigureClass; ABitmapFile: string);
