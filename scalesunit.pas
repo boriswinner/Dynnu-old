@@ -11,32 +11,32 @@ function WorldToScreen         (APoint: TFloatPoint): TPoint;
 function ScreenToWorld         (APoint: TPoint):      TFloatPoint;
 procedure ToShift              (APoint: TFloatPoint);
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
-procedure DoZoom               (AZoom: Double);
-procedure ShowAll(AMaxFloatPoint,AMinFloatPoint: TFloatPoint);
+procedure CenterZoom(AWidth,AHeight:integer;OldZoom:Double);
+procedure RectZoom(AHeight,AWidth:Integer;AMin,AMax:TFloatPoint);
 
 var
   Zoom: double;
   MaxFloatPoint, MinFloatPoint: TFloatPoint;//мировые
-  CenterDisplace: TFloatPoint;
+  Offset: TPoint;
   PaintBoxSize: TPoint;
 implementation
 
 function WorldToScreen (APoint: TFloatPoint): TPoint;
 begin
-  WorldToScreen.X := round((Apoint.X - CenterDisplace.X) * Zoom + PaintBoxSize.X/2);
-  WorldToScreen.Y := round((Apoint.Y - CenterDisplace.Y) * Zoom + PaintBoxSize.Y/2);
+  WorldToScreen.X:=round(APoint.X*Zoom/100)-Offset.x;
+  WorldToScreen.y:=round(APoint.Y*Zoom/100)-Offset.y;
 end;
 
 function ScreenToWorld (APoint: TPoint): TFloatPoint;
 begin
-  ScreenToWorld.X := (Apoint.X - PaintBoxSize.X/2) / Zoom + CenterDisplace.X;
-  ScreenToWorld.Y := (Apoint.Y - PaintBoxSize.Y/2) / Zoom + CenterDisplace.y;
+  ScreenToWorld.X := (APoint.x+Offset.x)/Zoom*100;
+  ScreenToWorld.Y := (APoint.y+Offset.y)/Zoom*100;
 end;
 
 //обновление смещения
 procedure ToShift (APoint: TFloatPoint);
 begin
-  CenterDisplace := CenterDisplace - APoint;
+  Offset := APoint;
 end;
 
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
@@ -51,19 +51,30 @@ begin
      MinFloatPoint.y := APoint.y;
 end;
 
-procedure ShowAll(AMaxFloatPoint,AMinFloatPoint: TFloatPoint);
+procedure CenterZoom(AWidth,AHeight:integer;OldZoom:Double);
 begin
-  ToShift(FloatPoint(CenterDisplace.x - (AMaxFloatPoint.x + AMinFloatPoint.x) / 2,
-    CenterDisplace.y - (AMaxFloatPoint.y + AMinFloatPoint.y) / 2));
-  Zoom := min(PaintBoxSize.x / (AMaxFloatPoint.x - AMinFloatPoint.x), PaintBoxSize.y /
-    (AMaxFloatPoint.y - AMinFloatPoint.y));
+  if Zoom>oldzoom then
+    begin
+      Offset.x:=Offset.x+round(AWidth*(Zoom-oldzoom)/200);
+      Offset.y:=Offset.y+round(AHeight*(Zoom-oldzoom)/200);
+    end
+  else
+    begin
+      Offset.x:=Offset.x-round(AWidth*(oldzoom-Zoom)/200);
+      Offset.y:=Offset.y-round(AHeight*(oldzoom-Zoom)/200);
+    end;
 end;
 
-procedure DoZoom(AZoom: Double);
+procedure RectZoom(AHeight,AWidth:Integer;AMin,AMax:TFloatPoint);
 begin
-  Zoom := AZoom / 100;
-  ToShift(FloatPoint(CenterDisplace.x - (MaxFloatPoint.x + MinFloatPoint.x) / 2,
-   CenterDisplace.y - (MaxFloatPoint.y + MinFloatPoint.y) / 2));
+  //AWidth:=AWidth+10;
+  //AHeight:=AHeight+10;
+  if (Awidth/(AMax.X-AMin.X))>(AHeight/(AMax.Y-AMin.Y)) then
+    Zoom:=AHeight/(AMax.Y-AMin.Y)*100
+  else
+    Zoom:=AWidth/(AMax.X-AMin.X)*100;
+  Offset.x:=round(AMin.X*Zoom/100);
+  Offset.y:=round(AMin.Y*Zoom/100);
 end;
 
 initialization

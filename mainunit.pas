@@ -35,6 +35,8 @@ type
     procedure AboutMenuItemClick(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure ScrollBarScroll(Sender: TObject;
+      ScrollCode: TScrollCode; var ScrollPos: Integer);
     procedure MainPaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
       Shift: TShiftState; X, Y: Integer);
     procedure MainPaintBoxResize(Sender: TObject);
@@ -60,6 +62,7 @@ type
     Colors: array of TColor;
     ColorsFile: text;
     BotScrollCent,RightScrollCent: integer;
+    ScrollBool: boolean;
   public
     { public declarations }
   end;
@@ -90,7 +93,7 @@ var
   i: integer;
   b: TBitBtn;
 begin
-  Zoom                        := 1;
+  Zoom                        := 100;
   scalesunit.PaintBoxSize.x   := MainPaintBox.Width;
   scalesunit.PaintBoxSize.y   := MainPaintBox.Height;
 
@@ -157,6 +160,17 @@ begin
     ZoomSpinEdit.Value := ZoomSpinEdit.Value - 10;
 end;
 
+procedure TMainForm.ScrollBarScroll(Sender: TObject;
+  ScrollCode: TScrollCode; var ScrollPos: Integer);
+begin
+  if not ScrollBool then
+    begin
+      ToShift(Point(HorizontalScrollBar.Position,VerticalScrollBar.Position));
+      Invalidate;
+    end;
+  ScrollBool:=false;
+end;
+
 procedure TMainForm.MainPaintBoxMouseUp(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
@@ -181,9 +195,8 @@ end;
 
 procedure TMainForm.ShowAllButtonClick(Sender: TObject);
 begin
-  scalesunit.ShowAll(MaxFloatPoint,MinFloatPoint);
-  ZoomSpinEdit.Value := round(Zoom*100);
-  ShowMessage(FloatToStr(zoom));
+  RectZoom(MainPaintBox.Height,MainPaintBox.Width,MinFloatPoint,MaxFloatPoint);
+  ZoomSpinEdit.Value:=round(Zoom);
   Invalidate;
 end;
 
@@ -246,6 +259,29 @@ begin
   begin
     Figures[i].Draw(MainPaintBox.Canvas);
   end;
+
+  if round(MinFloatPoint.X*Zoom/100)<HorizontalScrollBar.Min then
+    HorizontalScrollBar.Min:=round(MinFloatPoint.X*Zoom/100);
+  if HorizontalScrollBar.Max<round(MaxFloatPoint.X*Zoom/100) then
+    HorizontalScrollBar.Max:=round(MaxFloatPoint.X*Zoom/100);
+  if round(MinFloatPoint.Y*Zoom/100)<VerticalScrollBar.Min then
+    VerticalScrollBar.Min:=round(MinFloatPoint.Y*Zoom/100);
+  if VerticalScrollBar.Max<round(MaxFloatPoint.Y*Zoom/100) then
+    VerticalScrollBar.Max:=round(MaxFloatPoint.Y*Zoom/100);
+
+  if Offset.x+MainPaintBox.Width>HorizontalScrollBar.Max then
+    HorizontalScrollBar.Max:=Offset.x+MainPaintBox.Width;
+  if Offset.x<HorizontalScrollBar.Min then
+    HorizontalScrollBar.Min:=Offset.x;
+  if Offset.y+MainPaintBox.Height>VerticalScrollBar.Max then
+    VerticalScrollBar.Max:=Offset.y+MainPaintBox.Height;
+  if Offset.y<VerticalScrollBar.Min then
+    VerticalScrollBar.Min:=Offset.y;
+
+  ScrollBool:=true;
+  HorizontalScrollBar.Position:=Offset.x;
+  ScrollBool:=true;
+  VerticalScrollBar.Position:=Offset.y;
 end;
 
 procedure TMainForm.ScrollBarChange(Sender: TObject);
@@ -267,14 +303,13 @@ begin
 end;
 
 procedure TMainForm.ZoomSpinEditChange(Sender: TObject);
+var
+  oldzoom:double;
 begin
-  scalesunit.DoZoom(ZoomSpinEdit.Value);
+  oldzoom:=Zoom;
+  Val(ZoomSpinEdit.Text,Zoom);
+  CenterZoom(MainPaintBox.Width,MainPaintBox.Height,oldzoom);
   Invalidate;
-end;
-
-procedure SetScrollBarPositions;
-begin
-
 end;
 
 end.

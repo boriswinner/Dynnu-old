@@ -47,7 +47,7 @@ object MainForm: TMainForm
       Kind = sbVertical
       PageSize = 1
       TabOrder = 0
-      OnChange = ScrollBarChange
+      OnScroll = ScrollBarScroll
     end
     object HorizontalScrollBar: TScrollBar
       Left = 1
@@ -57,7 +57,7 @@ object MainForm: TMainForm
       Align = alBottom
       PageSize = 0
       TabOrder = 1
-      OnChange = ScrollBarChange
+      OnScroll = ScrollBarScroll
     end
   end
   object ColorsPanel: TPanel

@@ -55,6 +55,7 @@ type
 
 var
   ToolsRegister: array of TTool;
+  OffsetFirstPoint: TPoint;
 implementation
 uses Controls;
 
@@ -68,6 +69,11 @@ begin
     SetLength(Points,1);
     Points[high(Points)] := scalesunit.ScreenToWorld(APoint);
     SetMaxMinFloatPoints(ScreenToWorld(APoint));
+  end;
+  if AFigureClass = THandFigure then
+  begin
+    OffsetFirstPoint.x:=Offset.x+APoint.x;
+    OffsetFirstPoint.y:=Offset.y+APoint.y;
   end;
 end;
 
@@ -95,7 +101,8 @@ begin
     SetLength(Points,2);
     Points[high(Points)].x := scalesunit.ScreenToWorld(APoint).x - Points[low(Points)].x;
     Points[high(Points)].y := scalesunit.ScreenToWorld(APoint).y - Points[low(Points)].y;
-    ToShift(Points[high(Points)])
+    Offset.x:=OffsetFirstPoint.x-APoint.x;
+    Offset.y:=OffsetFirstPoint.y-APoint.y;
   end;
 end;
 
