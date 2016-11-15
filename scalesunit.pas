@@ -13,6 +13,7 @@ procedure SetOffset            (APoint: TFloatPoint);
 procedure SetMaxMinFloatPoints (APoint: TFloatPoint);
 procedure CenterZoom           (AWidth,AHeight:integer;OldZoom:Double);
 procedure RectZoom             (AHeight,AWidth:Integer;AMin,AMax:TFloatPoint);
+procedure ToPointZoom          (APoint: TFloatPoint);
 
 var
   Zoom: double;
@@ -50,6 +51,12 @@ begin
      MinFloatPoint.y := APoint.y;
 end;
 
+procedure ToPointZoom(APoint: TFloatPoint);
+begin
+  Offset.x:=round(APoint.X*Zoom/100 - APoint.x);
+  Offset.y:=round(APoint.Y*Zoom/100 - APoint.y);
+end;
+
 procedure CenterZoom(AWidth,AHeight:integer;OldZoom:Double);
 begin
   if Zoom>oldzoom then
@@ -65,11 +72,19 @@ begin
 end;
 
 procedure RectZoom(AHeight,AWidth:Integer;AMin,AMax:TFloatPoint);
+var
+  OldZoom: Double;
 begin
+  OldZoom := Zoom;
   if (Awidth/(AMax.X-AMin.X))>(AHeight/(AMax.Y-AMin.Y)) then
     Zoom := AHeight/(AMax.Y-AMin.Y)*100
   else
     Zoom := AWidth/(AMax.X-AMin.X)*100;
+  if (Zoom > 1500) then
+    begin
+      Zoom := OldZoom;
+      exit;
+    end;
   Offset.x:=round(AMin.X*Zoom/100);
   Offset.y:=round(AMin.Y*Zoom/100);
 end;

@@ -140,7 +140,7 @@ end;
 procedure TMainForm.FormActivate(Sender: TObject);
 begin
   CurrentTool := TRectangleTool.Create;
-  CurrentTool.FigureCreate(TRectangle,Point(0,0),clBlack,clWhite);
+  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite);
   CurrentTool.AddPoint(Point(MainPaintBox.Width,MainPaintBox.Height));
   CurrentTool := ToolsRegister[0];
   Invalidate;
@@ -180,6 +180,7 @@ begin
       begin
         if (not RBtn) then ZoomSpinEdit.Value := ZoomSpinEdit.Value*2 else
           ZoomSpinEdit.Value := ZoomSpinEdit.Value div 2;
+        ToPointZoom(Point(X,Y));
         RBtn := false;
       end else begin
         RectZoom(MainPaintBox.Height,
@@ -190,7 +191,7 @@ begin
     end;
   end;
   if (CurrentTool.ClassName = 'THandTool') or
-  (CurrentTool.ClassName = 'TMagnifierTool') then
+    (CurrentTool is TMagnifierTool) then
     setlength(Figures,length(Figures)-1);
   ZoomSpinEdit.Value := scalesunit.Zoom;
   Invalidate;

@@ -126,7 +126,7 @@ object MainForm: TMainForm
       Align = alBottom
       Alignment = taCenter
       AutoSelect = False
-      MaxValue = 500
+      MaxValue = 1500
       MinValue = 1
       OnChange = ZoomSpinEditChange
       TabOrder = 0
