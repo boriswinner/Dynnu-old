@@ -35,7 +35,6 @@ type
     ZoomSpinEdit: TSpinEdit;
     ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
-    procedure ComboBox1Select(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ScrollBarScroll(Sender: TObject;
@@ -83,7 +82,7 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if (ssRight in Shift) then RBtn := true;
-  CurrentTool.FigureCreate(CurrentTool.FigureClass,Point(X,Y),PenColor,BrushColor);
+  CurrentTool.FigureCreate(CurrentTool.FigureClass,Point(X,Y),PenColor,BrushColor,PenStyle,BrushStyle);
   Invalidate;
 end;
 
@@ -147,7 +146,7 @@ end;
 procedure TMainForm.FormActivate(Sender: TObject);
 begin
   CurrentTool := TRectangleTool.Create;
-  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite);
+  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite,psSolid,bsHorizontal);
   CurrentTool.AddPoint(Point(MainPaintBox.Width,MainPaintBox.Height));
   CurrentTool := ToolsRegister[0];
   Invalidate;

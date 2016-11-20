@@ -19,9 +19,11 @@ type
       FigureClass: class of TFigure;
   public
     procedure Initialize(APanel: TPanel); virtual;
-    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor; APenStyle: TPenStyle; ABrushStyle: TBrushStyle);
     procedure AddPoint(APoint: TPoint); virtual;
     procedure StopDraw(X,Y, AHeight, AWidth: integer; RBtn: boolean); virtual;
+    procedure PenStyleComboBoxSelect(Sender: TObject);
+    procedure FillStyleComboBoxSelect(Sender: TObject);
   end;
 
   TTwoPointsTools = class(TTool)
@@ -60,20 +62,20 @@ type
     procedure StopDraw(X,Y, AHeight, AWidth: integer; RBtn: boolean); override;
   end;
 
-procedure LineComboBoxSelect(Sender: TObject);
-
 var
   ToolsRegister: array of TTool;
   OffsetFirstPoint: TPoint;
 implementation
 
-procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor);
+procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor; APenStyle: TPenStyle; ABrushStyle: TBrushStyle);
 begin
   SetLength(Figures,length(Figures)+1);
   Figures[high(Figures)] := AFigureClass.Create;
   with Figures[high(Figures)] do begin
     FigurePenColor := APenColor;
     FigureBrushColor := ABrushColor;
+    FigurePenStyle := APenStyle;
+    BrushStyle := ABrushStyle;
     SetLength(Points,1);
     Points[high(Points)] := scalesunit.ScreenToWorld(APoint);
   end;
@@ -161,11 +163,16 @@ begin
   setlength(Figures,length(Figures)-1);
 end;
 
-procedure LineComboBoxSelect(Sender: TObject);
+procedure TTool.PenStyleComboBoxSelect(Sender: TObject);
 begin
-  PenStyle := TFPPenStyle(GetEnumValue(TypeInfo(TFPPenStyle),
+  figuresunit.PenStyle := TFPPenStyle(GetEnumValue(TypeInfo(TFPPenStyle),
   (Sender as TComboBox).Items[(Sender as TComboBox).ItemIndex]));
-  //PenStyle := (Sender as TComboBox).Items[(Sender as TComboBox).ItemIndex];
+end;
+
+procedure TTool.FillStyleComboBoxSelect(Sender: TObject);
+begin
+  figuresunit.BrushStyle := TBrushStyle(GetEnumValue(TypeInfo(TBrushStyle),
+  (Sender as TComboBox).Items[(Sender as TComboBox).ItemIndex]));
 end;
 
 
@@ -191,18 +198,19 @@ begin
   begin
     LineStyleComboBox.Items.Add(GetEnumName(TypeInfo(TFPPenStyle),i));
   end;
-  LineStyleComboBox.ItemIndex := ord(low(TFPPenStyle));
-  LineStyleComboBox.OnChange  := LineComboBoxSelect as procedure;
+  LineStyleComboBox.ItemIndex := ord(PenStyle);
+  LineStyleComboBox.OnChange  := @PenStyleComboBoxSelect;
 
   FillStyleComboBox := TComboBox.Create(APanel);
   FillStyleComboBox.Name := ('FillStyleComboBox');
   FillStyleComboBox.Parent := APanel;
   FillStyleComboBox.Align := alBottom;
-  for i := ord(low(TFillStyle)) to ord(high(TFillStyle)) do
+  for i := ord(low(TBrushStyle)) to ord(high(TBrushStyle)) do
   begin
-    FillStyleComboBox.Items.Add(GetEnumName(TypeInfo(TFillStyle),i));
+    FillStyleComboBox.Items.Add(GetEnumName(TypeInfo(TBrushStyle),i));
   end;
-  FillStyleComboBox.ItemIndex := ord(low(TFillStyle));
+  FillStyleComboBox.ItemIndex := ord(BrushStyle);
+  FillStyleComboBox.OnChange  := @FillStyleComboBoxSelect;
 end;
 {procedure TPolylineTool.Initialize(APanel: TPanel);
 var

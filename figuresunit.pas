@@ -16,6 +16,8 @@ type
   public
     Points: array of TFloatPoint;
     FigurePenColor,FigureBrushColor: TColor;
+    FigurePenStyle: TPenStyle;
+    FigureBrushStyle: TBrushStyle;
   end;
 
   TPolyline       = class(TFigure)
@@ -54,12 +56,15 @@ var
   FiguresRegister: array of TFigureClass;
   HandPrevCent: TPoint;
   PenStyle: TPenStyle;
+  BrushStyle: TBrushStyle;
 implementation
 
 procedure TPolyline.Draw(Canvas: TCanvas);
 var i: integer;
 begin
   Canvas.Pen.Color := FigurePenColor;
+  Canvas.Pen.Style := FigurePenStyle;
+  Canvas.Brush.Style := FigureBrushStyle;
   for i := low(Points) to high(Points)-1 do
   begin
     Canvas.Line   (scalesunit.WorldToScreen(Points[i])  .x,
@@ -73,6 +78,8 @@ procedure TRectangle.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Brush.Color := FigureBrushColor;
+  Canvas.Pen.Style := FigurePenStyle;
+  Canvas.Brush.Style := FigureBrushStyle;
   Canvas.Rectangle(scalesunit.WorldToScreen(Points[low(Points)]) .x,
                    scalesunit.WorldToScreen(Points[low(Points)]) .y,
                    scalesunit.WorldToScreen(Points[high(Points)]).x,
@@ -83,6 +90,8 @@ procedure TEllipse.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
   Canvas.Brush.Color := FigureBrushColor;
+  Canvas.Pen.Style := FigurePenStyle;
+  Canvas.Brush.Style := FigureBrushStyle;
   Canvas.Ellipse  (scalesunit.WorldToScreen(Points[low(Points)]) .x,
                    scalesunit.WorldToScreen(Points[low(Points)]) .y,
                    scalesunit.WorldToScreen(Points[high(Points)]).x,
@@ -92,6 +101,8 @@ end;
 procedure TLine.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
+  Canvas.Pen.Style := FigurePenStyle;
+  Canvas.Brush.Style := FigureBrushStyle;
   Canvas.Line     (scalesunit.WorldToScreen(Points[low(Points)]) .x,
                    scalesunit.WorldToScreen(Points[low(Points)]) .y,
                    scalesunit.WorldToScreen(Points[high(Points)]).x,
