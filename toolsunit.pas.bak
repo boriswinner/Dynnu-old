@@ -192,7 +192,7 @@ begin
     LineStyleComboBox.Items.Add(GetEnumName(TypeInfo(TFPPenStyle),i));
   end;
   LineStyleComboBox.ItemIndex := ord(low(TFPPenStyle));
-  LineStyleComboBox.OnChange  := procedure(LineComboBoxSelect);
+  LineStyleComboBox.OnChange  := LineComboBoxSelect as procedure;
 
   FillStyleComboBox := TComboBox.Create(APanel);
   FillStyleComboBox.Name := ('FillStyleComboBox');

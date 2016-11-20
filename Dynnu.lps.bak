@@ -50,8 +50,8 @@
         <IsVisibleTab Value="True"/>
         <EditorIndex Value="1"/>
         <WindowIndex Value="1"/>
-        <TopLine Value="178"/>
-        <CursorPos X="63" Y="195"/>
+        <TopLine Value="175"/>
+        <CursorPos X="65" Y="195"/>
         <UsageCount Value="200"/>
         <Loaded Value="True"/>
       </Unit4>
@@ -185,7 +185,7 @@
       </Position29>
       <Position30>
         <Filename Value="toolsunit.pas"/>
-        <Caret Line="195" Column="65" TopLine="175"/>
+        <Caret Line="195" Column="59" TopLine="176"/>
       </Position30>
     </JumpHistory>
   </ProjectSession>

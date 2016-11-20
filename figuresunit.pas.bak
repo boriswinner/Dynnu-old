@@ -53,7 +53,7 @@ var
   PenColor,BrushColor: TColor;
   FiguresRegister: array of TFigureClass;
   HandPrevCent: TPoint;
-  PenStyle: TPenStyle;
+  FigurePenStyle: TPenStyle;
 implementation
 
 procedure TPolyline.Draw(Canvas: TCanvas);
