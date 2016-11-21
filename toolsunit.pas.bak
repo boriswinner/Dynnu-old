@@ -19,47 +19,83 @@ type
       FigureClass: class of TFigure;
   public
     procedure Initialize(APanel: TPanel); virtual;
-    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor; APenStyle: TPenStyle; ABrushStyle: TBrushStyle);
+    procedure CreateLineWidthSpinEdit(APanel: TPanel);
+    procedure CreateLineStyleComboBox(APanel: TPanel);
+    procedure CreateFillStyleComboBox(APanel: TPanel);
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); virtual;
     procedure AddPoint(APoint: TPoint); virtual;
     procedure StopDraw(X,Y, AHeight, AWidth: integer; RBtn: boolean); virtual;
     procedure PenStyleComboBoxSelect(Sender: TObject);
     procedure FillStyleComboBoxSelect(Sender: TObject);
+    procedure LineWidthSpinEditSelect (Sender: TObject);
   end;
 
   TTwoPointsTools = class(TTool)
   public
     procedure AddPoint(APoint: TPoint); override;
+    procedure Initialize(APanel: TPanel); override;
   end;
 
-  THandTool       = class(TTool)
+  TSpecificTools = class(TTool)
+  public
+    procedure Initialize(APanel: TPanel); override;
+  end;
+
+  THandTool       = class(TSpecificTools)
   public
     Figure: THandFigure;
   public
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); override;
     procedure AddPoint(APoint: TPoint); override;
     procedure StopDraw(X,Y, AHeight, AWidth: integer; RBtn: boolean); override;
   end;
 
   TPolylineTool   = class(TTool)
     Figure: TPolyline;
+  public
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); override;
   end;
 
   TRectangleTool  = class(TTwoPointsTools)
     Figure: TRectangle;
+  public
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); override;
   end;
 
   TEllipseTool    = class(TTwoPointsTools)
     Figure: TEllipse;
+  public
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); override;
   end;
 
   TLineTool       = class(TTwoPointsTools)
     Figure: TLine;
+  public
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); override;
+    procedure Initialize(APanel: TPanel); override;
   end;
 
   TMagnifierTool  = class(TTwoPointsTools)
   public
     Figure: TRectangle;
   public
+    procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+      APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+      ABrushStyle: TBrushStyle; APenWidth: integer); override;
     procedure StopDraw(X,Y, AHeight, AWidth: integer; RBtn: boolean); override;
+    procedure Initialize(APanel: TPanel); override;
   end;
 
 var
@@ -67,15 +103,15 @@ var
   OffsetFirstPoint: TPoint;
 implementation
 
-procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint; APenColor,ABrushColor: TColor; APenStyle: TPenStyle; ABrushStyle: TBrushStyle);
+procedure TTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle; ABrushStyle: TBrushStyle;
+  APenWidth: integer);
 begin
   SetLength(Figures,length(Figures)+1);
   Figures[high(Figures)] := AFigureClass.Create;
   with Figures[high(Figures)] do begin
     FigurePenColor := APenColor;
     FigureBrushColor := ABrushColor;
-    FigurePenStyle := APenStyle;
-    BrushStyle := ABrushStyle;
     SetLength(Points,1);
     Points[high(Points)] := scalesunit.ScreenToWorld(APoint);
   end;
@@ -86,6 +122,53 @@ begin
   end;
   if (AFigureClass <> THandFigure) and (AFigureClass <> TMagnifierFrame) then
         SetMaxMinFloatPoints(ScreenToWorld(APoint));
+end;
+procedure TPolylineTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+  ABrushStyle: TBrushStyle; APenWidth: integer);
+begin
+  Inherited;
+  (Figures[high(Figures)] as TPolyline).FigurePenStyle := APenStyle;
+  (Figures[high(Figures)] as TPolyline).FigurePenWidth := APenWidth;
+end;
+
+procedure THandTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+  ABrushStyle: TBrushStyle; APenWidth: integer);
+begin
+  Inherited;
+end;
+
+procedure TRectangleTool.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+  ABrushStyle: TBrushStyle; APenWidth: integer);
+begin
+  Inherited;
+  (Figures[high(Figures)] as TRectangle).FigurePenStyle := APenStyle;
+  (Figures[high(Figures)] as TRectangle).FigureBrushStyle := ABrushStyle;
+  (Figures[high(Figures)] as TRectangle).FigurePenWidth := APenWidth;
+end;
+
+procedure TEllipse.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+  ABrushStyle: TBrushStyle; APenWidth: integer);
+begin
+  Inherited;
+  (Figures[high(Figures)] as TEllipse).FigurePenStyle := APenStyle;
+  (Figures[high(Figures)] as TEllipse).FigureBrushStyle := ABrushStyle;
+  (Figures[high(Figures)] as TEllipse).FigurePenWidth := APenWidth;
+end;
+
+procedure TLine.FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+  ABrushStyle: TBrushStyle; APenWidth: integer);
+begin
+end;
+
+procedure FigureCreate(AFigureClass: TFigureClass; APoint: TPoint;
+  APenColor,ABrushColor: TColor; APenStyle: TPenStyle;
+  ABrushStyle: TBrushStyle; APenWidth: integer);
+begin
 end;
 
 procedure TTool.AddPoint(APoint: TPoint);
@@ -175,12 +258,13 @@ begin
   (Sender as TComboBox).Items[(Sender as TComboBox).ItemIndex]));
 end;
 
-
-procedure TTool.Initialize(APanel: TPanel);
+procedure TTool.LineWidthSpinEditSelect (Sender: TObject);
+begin
+  PenWidth := (Sender as TSpinEdit).Value;
+end;
+procedure TTool.CreateLineWidthSpinEdit(APanel: TPanel);
 var
   LineWidthSpinEdit: TSpinEdit;
-  LineStyleComboBox,FillStyleComboBox: TComboBox;
-  i: integer;
 begin
   LineWidthSpinEdit := TSpinEdit.Create(APanel);
   LineWidthSpinEdit.Name := 'LineWidthSpinEdit';
@@ -188,8 +272,14 @@ begin
   LineWidthSpinEdit.Align := alBottom;
   LineWidthSpinEdit.MaxValue := 100;
   LineWidthSpinEdit.MinValue := 1;
-  LineWidthSpinEdit.Value := 1;
-
+  LineWidthSpinEdit.Value := PenWidth;
+  LineWidthSpinEdit.OnChange := @LineWidthSpinEditSelect;
+end;
+procedure TTool.CreateLineStyleComboBox(APanel: TPanel);
+var
+  LineStyleComboBox: TComboBox;
+  i: integer;
+begin
   LineStyleComboBox := TComboBox.Create(APanel);
   LineStyleComboBox.Name := ('LineStyleComboBox');
   LineStyleComboBox.Parent := APanel;
@@ -199,8 +289,13 @@ begin
     LineStyleComboBox.Items.Add(GetEnumName(TypeInfo(TFPPenStyle),i));
   end;
   LineStyleComboBox.ItemIndex := ord(PenStyle);
-  LineStyleComboBox.OnChange  := @PenStyleComboBoxSelect;
-
+  LineStyleComboBox.OnSelect  := @PenStyleComboBoxSelect;
+end;
+procedure TTool.CreateFillStyleComboBox(APanel: TPanel);
+var
+  FillStyleComboBox: TComboBox;
+  i: integer;
+begin
   FillStyleComboBox := TComboBox.Create(APanel);
   FillStyleComboBox.Name := ('FillStyleComboBox');
   FillStyleComboBox.Parent := APanel;
@@ -210,55 +305,32 @@ begin
     FillStyleComboBox.Items.Add(GetEnumName(TypeInfo(TBrushStyle),i));
   end;
   FillStyleComboBox.ItemIndex := ord(BrushStyle);
-  FillStyleComboBox.OnChange  := @FillStyleComboBoxSelect;
+  FillStyleComboBox.OnSelect  := @FillStyleComboBoxSelect;
 end;
-{procedure TPolylineTool.Initialize(APanel: TPanel);
-var
-  LineWidthComboBox: TComboBox;
+
+procedure TTool.Initialize(APanel: TPanel);
 begin
-  LineWidthComboBox.Create(APanel);
-
+  CreateLineWidthSpinEdit(APanel);
 end;
 
-procedure TRectangleTool.Initialize(APanel: TPanel);
-var
-  LineWidthComboBox: TComboBox;
+procedure TTwoPointsTools.Initialize(APanel: TPanel);
 begin
-  LineWidthComboBox.Create(APanel);
-
+  CreateLineWidthSpinEdit(APanel);
+  CreateLineStyleComboBox(APanel);
+  CreateFillStyleComboBox(APanel);
 end;
 
-procedure TEllipseTool.Initialize(APanel: TPanel);
-var
-  LineWidthComboBox: TComboBox;
+procedure TSpecificTools.Initialize(APanel: TPanel);
 begin
-  LineWidthComboBox.Create(APanel);
-
 end;
-
-procedure TLineTool.Initialize(APanel: TPanel);
-var
-  LineWidthComboBox: TComboBox;
-begin
-  LineWidthComboBox.Create(APanel);
-
-end;
-
 procedure TMagnifierTool.Initialize(APanel: TPanel);
-var
-  LineWidthComboBox: TComboBox;
 begin
-  LineWidthComboBox.Create(APanel);
-
 end;
-
-procedure THandTool.Initialize(APanel: TPanel);
-var
-  LineWidthComboBox: TComboBox;
+procedure TLineTool.Initialize(APanel: TPanel);
 begin
-  LineWidthComboBox.Create(APanel);
-
-end; }
+  CreateLineWidthSpinEdit(APanel);
+  CreateLineStyleComboBox(APanel);
+end;
 
 initialization
 RegisterTool (TPolylineTool.Create, TPolyline, 'Pencil.bmp');

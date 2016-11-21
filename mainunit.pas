@@ -82,7 +82,8 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
   Shift: TShiftState; X, Y: Integer);
 begin
   if (ssRight in Shift) then RBtn := true;
-  CurrentTool.FigureCreate(CurrentTool.FigureClass,Point(X,Y),PenColor,BrushColor,PenStyle,BrushStyle);
+  CurrentTool.FigureCreate(CurrentTool.FigureClass,Point(X,Y),PenColor,
+    BrushColor,PenStyle,BrushStyle,PenWidth);
   Invalidate;
 end;
 
@@ -146,7 +147,7 @@ end;
 procedure TMainForm.FormActivate(Sender: TObject);
 begin
   CurrentTool := TRectangleTool.Create;
-  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite,psSolid,bsSolid);
+  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite,psSolid,bsSolid,1);
   CurrentTool.AddPoint(Point(MainPaintBox.Width,MainPaintBox.Height));
   CurrentTool := ToolsRegister[0];
   Invalidate;

@@ -16,26 +16,34 @@ type
   public
     Points: array of TFloatPoint;
     FigurePenColor,FigureBrushColor: TColor;
-    FigurePenStyle: TPenStyle;
-    FigureBrushStyle: TBrushStyle;
   end;
 
   TPolyline       = class(TFigure)
+  FigurePenWidth: integer;
+  FigurePenStyle: TPenStyle;
   public
     procedure Draw(Canvas:TCanvas); override;
   end;
 
   TRectangle      = class(TFigure)
+  FigurePenStyle: TPenStyle;
+  FigureBrushStyle: TBrushStyle;
+  FigurePenWidth: integer;
   public
     procedure Draw(Canvas:TCanvas); override;
   end;
 
   TEllipse        = class(TFigure)
+  FigurePenStyle: TPenStyle;
+  FigureBrushStyle: TBrushStyle;
+  FigurePenWidth: integer;
   public
     procedure Draw(Canvas:TCanvas); override;
   end;
 
   TLine           = class(TFigure)
+  FigurePenWidth: integer;
+  FigurePenStyle: TPenStyle;
   public
     procedure Draw(Canvas:TCanvas); override;
   end;
@@ -57,14 +65,17 @@ var
   HandPrevCent: TPoint;
   PenStyle: TPenStyle;
   BrushStyle: TBrushStyle;
+  PenWidth: integer;
 implementation
 
 procedure TPolyline.Draw(Canvas: TCanvas);
 var i: integer;
 begin
   Canvas.Pen.Color := FigurePenColor;
-  Canvas.Pen.Style := FigurePenStyle;
-  Canvas.Brush.Style := FigureBrushStyle;
+  Canvas.Pen.Width := FigurePenWidth;
+  Canvas.Brush.Color := clBlack;
+  Canvas.Pen.Style := psSolid;
+  Canvas.Brush.Style := bsSolid;
   for i := low(Points) to high(Points)-1 do
   begin
     Canvas.Line   (scalesunit.WorldToScreen(Points[i])  .x,
@@ -77,6 +88,7 @@ end;
 procedure TRectangle.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
+  Canvas.Pen.Width := FigurePenWidth;
   Canvas.Brush.Color := FigureBrushColor;
   Canvas.Pen.Style := FigurePenStyle;
   Canvas.Brush.Style := FigureBrushStyle;
@@ -89,6 +101,7 @@ end;
 procedure TEllipse.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
+  Canvas.Pen.Width := FigurePenWidth;
   Canvas.Brush.Color := FigureBrushColor;
   Canvas.Pen.Style := FigurePenStyle;
   Canvas.Brush.Style := FigureBrushStyle;
@@ -101,8 +114,10 @@ end;
 procedure TLine.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := FigurePenColor;
+  Canvas.Pen.Width := FigurePenWidth;
+  Canvas.Brush.Color := clBlack;
   Canvas.Pen.Style := FigurePenStyle;
-  Canvas.Brush.Style := FigureBrushStyle;
+  Canvas.Brush.Style := bsSolid;
   Canvas.Line     (scalesunit.WorldToScreen(Points[low(Points)]) .x,
                    scalesunit.WorldToScreen(Points[low(Points)]) .y,
                    scalesunit.WorldToScreen(Points[high(Points)]).x,
@@ -113,6 +128,9 @@ procedure THandFigure.Draw(Canvas: TCanvas);
 begin
   Canvas.Brush.Color := clWhite;
   Canvas.Pen.Color := clBlack;
+  Canvas.Pen.Style := psSolid;
+  Canvas.Brush.Style := bsSolid;
+  Canvas.Pen.Width := 1;
   Canvas.Ellipse  (scalesunit.WorldToScreen(Points[low(Points)]).x-5,
                    scalesunit.WorldToScreen(Points[low(Points)]).y-5,
                    scalesunit.WorldToScreen(Points[low(Points)]).x+5,
@@ -123,6 +141,9 @@ procedure TMagnifierFrame.Draw(Canvas: TCanvas);
 begin
   Canvas.Pen.Color := clBlack;
   Canvas.Brush.Color := clWhite;
+  Canvas.Pen.Style := psSolid;
+  Canvas.Brush.Style := bsSolid;
+  Canvas.Pen.Width := 1;
   Canvas.Frame    (scalesunit.WorldToScreen(Points[low(Points)]) .x,
                    scalesunit.WorldToScreen(Points[low(Points)]) .y,
                    scalesunit.WorldToScreen(Points[high(Points)]).x,
@@ -130,5 +151,6 @@ begin
 end;
 
 initialization
+PenWidth := 1;
 end.
 
