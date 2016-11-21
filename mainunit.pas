@@ -6,7 +6,7 @@ interface
 
 uses
   Classes, SysUtils, FileUtil, Forms, Controls, Graphics, Dialogs, Menus,
-  ExtCtrls, StdCtrls, Grids, LCLIntf, LCLType, Buttons, GraphMath, Math,
+  ExtCtrls, StdCtrls, Grids, LCLIntf, LCLType, Buttons, GraphMath, Math, FPCanvas, TypInfo,
   Spin, aboutunit, figuresunit, toolsunit, scalesunit;
 
 type
@@ -15,11 +15,13 @@ type
   { TMainForm }
 
   TMainForm = class(TForm)
+    AntiAliasingLabel: TLabel;
     ButtonsPanel: TPanel;
     ColorsGridColorDialog: TColorDialog;
     ColorLabel1: TLabel;
     ColorLabel2: TLabel;
     ColorsGrid: TDrawGrid;
+    AntiAliasingComboBox: TComboBox;
     MainMenu: TMainMenu;
     FileSubMenu: TMenuItem;
     HelpSubMenu: TMenuItem;
@@ -32,9 +34,11 @@ type
     HorizontalScrollBar: TScrollBar;
     ShowAllButton: TButton;
     VerticalScrollBar: TScrollBar;
+    ZoomLabel: TLabel;
     ZoomSpinEdit: TSpinEdit;
     ToolsPanel: TPanel;
     procedure AboutMenuItemClick(Sender: TObject);
+    procedure AntiAliasingComboBoxChange(Sender: TObject);
     procedure FormActivate(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure ScrollBarScroll(Sender: TObject;
@@ -83,7 +87,7 @@ procedure TMainForm.MainPaintBoxMouseDown(Sender: TObject; Button: TMouseButton;
 begin
   if (ssRight in Shift) then RBtn := true;
   CurrentTool.FigureCreate(CurrentTool.FigureClass,Point(X,Y),PenColor,
-    BrushColor,PenStyle,BrushStyle,PenWidth);
+    BrushColor,PenStyle,BrushStyle,PenWidth, Corners, Angle);
   Invalidate;
 end;
 
@@ -134,6 +138,13 @@ begin
   end;
   ButtonsPanel.Height := 40 + (high(ToolsRegister) div 4)*32;
 
+  for i := ord(low(TAntiAliasingMode)) to ord(high(TAntiAliasingMode)) do
+  begin
+    AntiAliasingComboBox.Items.Add(GetEnumName(TypeInfo(TAntiAliasingMode),i));
+  end;
+  AntiAliasingComboBox.ItemIndex := ord(Canvas.AntiAliasingMode);
+
+
   HorizontalScrollBar.max := MainPaintBox.Width;
   VerticalScrollBar.max   := MainPaintBox.Height;
 end;
@@ -143,11 +154,17 @@ begin
   AboutForm.ShowModal;
 end;
 
+procedure TMainForm.AntiAliasingComboBoxChange(Sender: TObject);
+begin
+  MainPaintBox.Canvas.AntiAliasingMode := TAntiAliasingMode(GetEnumValue(TypeInfo(TAntiAliasingMode),
+  (Sender as TComboBox).Items[(Sender as TComboBox).ItemIndex]));
+  Invalidate;
+end;
 
 procedure TMainForm.FormActivate(Sender: TObject);
 begin
   CurrentTool := TRectangleTool.Create;
-  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite,psSolid,bsSolid,1);
+  CurrentTool.FigureCreate(TRectangle,Point(0,0),clWhite,clWhite,psSolid,bsSolid,1,1,0);
   CurrentTool.AddPoint(Point(MainPaintBox.Width,MainPaintBox.Height));
   CurrentTool := ToolsRegister[0];
   Invalidate;
